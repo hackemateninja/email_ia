@@ -26,19 +26,36 @@ defmodule EmailIa.User do
   end
 
   def find_or_create_by_oauth(attrs) do
+    IO.puts("=== User.find_or_create_by_oauth ===")
+    IO.puts("Looking for user with provider: #{attrs.provider}, uid: #{attrs.provider_uid}")
+
     case find_by_provider_and_uid(attrs.provider, attrs.provider_uid) do
-      nil -> create_user(attrs)
-      user -> {:ok, user}
+      nil ->
+        IO.puts("User not found, creating new user...")
+        create_user(attrs)
+
+      user ->
+        IO.puts("User found: #{inspect(user)}")
+        {:ok, user}
     end
   end
 
   defp find_by_provider_and_uid(provider, provider_uid) do
-    EmailIa.Repo.get_by(__MODULE__, provider: provider, provider_uid: provider_uid)
+    IO.puts("Searching for user with provider: #{provider}, uid: #{provider_uid}")
+    result = EmailIa.Repo.get_by(__MODULE__, provider: provider, provider_uid: provider_uid)
+    IO.puts("Search result: #{inspect(result)}")
+    result
   end
 
   defp create_user(attrs) do
-    %__MODULE__{}
-    |> changeset(attrs)
-    |> EmailIa.Repo.insert()
+    IO.puts("Creating user with attrs: #{inspect(attrs)}")
+
+    result =
+      %__MODULE__{}
+      |> changeset(attrs)
+      |> EmailIa.Repo.insert()
+
+    IO.puts("Create user result: #{inspect(result)}")
+    result
   end
 end
