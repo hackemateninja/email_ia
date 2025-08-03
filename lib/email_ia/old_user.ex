@@ -27,7 +27,7 @@ defmodule EmailIa.User do
     end
   end
 
-  defp find_by_provider_and_uid(provider, provider_uid) do
+  defp find_by_provider_and_uid(_provider, _provider_uid) do
     # In a real app, you'd query the database
     # For now, we'll return nil to simulate a new user
     nil

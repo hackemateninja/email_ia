@@ -41,11 +41,6 @@ defmodule EmailIaWeb.AuthController do
             |> put_session(:current_user, user)
             |> put_flash(:info, "Successfully authenticated with Google!")
             |> redirect(to: ~p"/dashboard")
-
-          {:error, _changeset} ->
-            conn
-            |> put_flash(:error, "Error creating user account.")
-            |> redirect(to: ~p"/")
         end
     end
   end
