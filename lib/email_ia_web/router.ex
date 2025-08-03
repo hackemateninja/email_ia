@@ -18,6 +18,12 @@ defmodule EmailIaWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :home
+    live "/dashboard", DashboardLive
+    live "/dashboard/emails", EmailsLive
+    live "/dashboard/emails/:id", EmailLive, :show
+    live "/dashboard/categories", CategoriesLive
+    live "/dashboard/categories/:id", CategoryLive, :show
+    live "/dashboard/accounts", AccountsLive
   end
 
   # Other scopes may use custom stacks.
