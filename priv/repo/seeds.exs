@@ -22,62 +22,28 @@ Repo.delete_all(GoogleAccount)
 Repo.delete_all(Category)
 Repo.delete_all(User)
 
-# Generate fake users
-users = [
-  %{
-    email: "john.doe@example.com",
-    name: "John Doe",
-    image:
-      "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face",
-    provider: "google",
-    provider_uid: "google_123456789"
-  },
-  %{
-    email: "jane.smith@example.com",
-    name: "Jane Smith",
-    image:
-      "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=150&h=150&fit=crop&crop=face",
-    provider: "google",
-    provider_uid: "google_987654321"
-  },
-  %{
-    email: "mike.wilson@example.com",
-    name: "Mike Wilson",
-    image:
-      "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face",
-    provider: "google",
-    provider_uid: "google_456789123"
-  },
-  %{
-    email: "sarah.johnson@example.com",
-    name: "Sarah Johnson",
-    image:
-      "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=face",
-    provider: "google",
-    provider_uid: "google_789123456"
-  },
-  %{
-    email: "david.brown@example.com",
-    name: "David Brown",
-    image:
-      "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&h=150&fit=crop&crop=face",
-    provider: "google",
-    provider_uid: "google_321654987"
-  }
-]
-
 # Insert users
 inserted_users =
-  Enum.map(users, fn user_attrs ->
+  [
     Repo.insert!(%User{
-      id: Ecto.UUID.generate(),
-      email: user_attrs.email,
-      name: user_attrs.name,
-      image: user_attrs.image,
-      provider: user_attrs.provider,
-      provider_uid: user_attrs.provider_uid
+      id: "39d01333-c8c2-489c-9d88-d002defd5a1d",
+      email: "nitrowitty@gmail.com",
+      name: "hackemate ninja",
+      image:
+        "https://lh3.googleusercontent.com/a/ACg8ocKmhVbpk4hdiEueu6nVVYwzXVWW0goNiYGoGkgz8DwTeNpEhMmb=s96-c",
+      provider: "google",
+      provider_uid: "117533627671074006251"
+    }),
+    Repo.insert!(%User{
+      id: "f2298322-307a-423f-bbb7-c420a42dd48a",
+      email: "hackemate.ninja@gmail.com",
+      name: "herman morales",
+      image:
+        "https://lh3.googleusercontent.com/a/ACg8ocLjdDjhO86v0xD3pvSxNYMVpsDVWjPiozdH2CW34a7tTXYmMTg=s96-c",
+      provider: "google",
+      provider_uid: "116026525680648509029"
     })
-  end)
+  ]
 
 # Generate categories for each user
 categories_data = [
