@@ -7,7 +7,8 @@ defmodule EmailIa.Categories.Category do
   schema "categories" do
     field :name, :string
     field :description, :string
-    field :user_id, :binary_id
+    belongs_to :user, EmailIa.User
+    has_many :emails, EmailIa.Emails.Email
 
     timestamps(type: :utc_datetime)
   end

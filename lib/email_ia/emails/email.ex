@@ -15,8 +15,8 @@ defmodule EmailIa.Emails.Email do
     field :unsubscribe_link, :string
     field :imported_at, :utc_datetime
     field :archived, :boolean, default: false
-    field :google_account_id, :binary_id
-    field :category_id, :binary_id
+    belongs_to :google_account, EmailIa.GoogleAccounts.GoogleAccount
+    belongs_to :category, EmailIa.Categories.Category
 
     timestamps(type: :utc_datetime)
   end
@@ -24,7 +24,29 @@ defmodule EmailIa.Emails.Email do
   @doc false
   def changeset(email, attrs) do
     email
-    |> cast(attrs, [:message_id, :subject, :from, :to, :snippet, :ai_summary, :original_body, :unsubscribe_link, :imported_at, :archived])
-    |> validate_required([:message_id, :subject, :from, :to, :snippet, :ai_summary, :original_body, :unsubscribe_link, :imported_at, :archived])
+    |> cast(attrs, [
+      :message_id,
+      :subject,
+      :from,
+      :to,
+      :snippet,
+      :ai_summary,
+      :original_body,
+      :unsubscribe_link,
+      :imported_at,
+      :archived
+    ])
+    |> validate_required([
+      :message_id,
+      :subject,
+      :from,
+      :to,
+      :snippet,
+      :ai_summary,
+      :original_body,
+      :unsubscribe_link,
+      :imported_at,
+      :archived
+    ])
   end
 end

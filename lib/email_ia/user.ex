@@ -11,6 +11,8 @@ defmodule EmailIa.User do
     field :image, :string
     field :provider, :string
     field :provider_uid, :string
+    has_many :categories, EmailIa.Categories.Category
+    has_many :google_accounts, EmailIa.GoogleAccounts.GoogleAccount
 
     timestamps()
   end

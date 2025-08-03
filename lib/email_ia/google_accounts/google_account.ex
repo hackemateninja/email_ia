@@ -4,12 +4,13 @@ defmodule EmailIa.GoogleAccounts.GoogleAccount do
 
   @primary_key {:id, :binary_id, autogenerate: true}
   @foreign_key_type :binary_id
-  schema "google_acounts" do
+  schema "google_accounts" do
     field :email, :string
     field :access_token, :string
     field :refresh_token, :string
     field :token_expiry, :utc_datetime
-    field :user_id, :binary_id
+    belongs_to :user, EmailIa.User
+    has_many :emails, EmailIa.Emails.Email
 
     timestamps(type: :utc_datetime)
   end
