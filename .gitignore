@@ -35,3 +35,6 @@ email_ia-*.tar
 npm-debug.log
 /assets/node_modules/
 
+.env
+client_secret.json
+client_secret_*.json
