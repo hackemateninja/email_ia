@@ -15,11 +15,11 @@ defmodule EmailIaWeb.Router do
   end
 
   scope "/", EmailIaWeb do
-    pipe_through :browser
+    pipe_through [:browser, EmailIaWeb.AuthPlug]
 
     get "/", AuthController, :signin
 
-    live_session :current_route, on_mount: [EmailIaWeb.CurrentRoute] do
+    live_session :current_route, on_mount: [EmailIaWeb.CurrentRoute, EmailIaWeb.AuthHook] do
       scope "/dashboard" do
         live "/", DashboardLive
         live "/emails", EmailsLive
@@ -31,22 +31,22 @@ defmodule EmailIaWeb.Router do
     end
   end
 
-  scope "/", EmailIaWeb do
-    pipe_through [:browser, EmailIaWeb.AuthPlug]
+  # scope "/", EmailIaWeb do
+  #   pipe_through [:browser, EmailIaWeb.AuthPlug]
 
-    # Protected routes that require authentication
-    # Add any protected routes here
-    # live_session :current_route, on_mount: [EmailIaWeb.CurrentRoute] do
-    # scope "/dashboard" do
-    #   live "/", DashboardLive
-    #   live "/emails", EmailsLive
-    #   live "/emails/:id", EmailLive, :show
-    #   live "/categories", CategoriesLive
-    #   live "/categories/:id", CategoryLive, :show
-    #   live "/accounts", AccountsLive
-    # end
-    # end
-  end
+  #   # Protected routes that require authentication
+  #   # Add any protected routes here
+  #   # live_session :current_route, on_mount: [EmailIaWeb.CurrentRoute] do
+  #   # scope "/dashboard" do
+  #   #   live "/", DashboardLive
+  #   #   live "/emails", EmailsLive
+  #   #   live "/emails/:id", EmailLive, :show
+  #   #   live "/categories", CategoriesLive
+  #   #   live "/categories/:id", CategoryLive, :show
+  #   #   live "/accounts", AccountsLive
+  #   # end
+  #   # end
+  # end
 
   scope "/auth", EmailIaWeb do
     pipe_through :browser

@@ -29,9 +29,24 @@
         Accounts
       </.link>
     </div>
-  </div>
-  <div class="h-1/4 py-3 text-sm px-4 sm:px-6 lg:px-8 deco-bg">
-    <h1>Hello</h1>
+
+    <div class="flex items-center gap-4">
+      <%= if assigns[:current_user] do %>
+        <div class="flex items-center gap-2 text-white">
+          <%= if @current_user.image do %>
+            <img src={@current_user.image} alt="Profile" class="w-8 h-8 rounded-full" />
+          <% end %>
+          <span class="text-sm font-medium">{@current_user.name}</span>
+          <.link href={~p"/auth/logout"} class="text-gray-400 hover:text-white text-sm">
+            Logout
+          </.link>
+        </div>
+      <% else %>
+        <.link href={~p"/auth/signin"} class="text-gray-400 hover:text-white text-sm">
+          Sign In
+        </.link>
+      <% end %>
+    </div>
   </div>
 </header>
 <main class="px-4 sm:px-6 lg:px-8">
