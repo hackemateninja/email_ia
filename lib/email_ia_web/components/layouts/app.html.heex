@@ -37,7 +37,11 @@
             <img src={@current_user.image} alt="Profile" class="w-8 h-8 rounded-full" />
           <% end %>
           <span class="text-sm font-medium">{@current_user.name}</span>
-          <.link href={~p"/auth/logout"} class="text-gray-400 hover:text-white text-sm">
+          <.link
+            href={~p"/auth/logout"}
+            method="delete"
+            class="text-gray-400 hover:text-white text-sm"
+          >
             Logout
           </.link>
         </div>

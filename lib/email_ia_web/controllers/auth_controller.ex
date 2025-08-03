@@ -8,8 +8,9 @@ defmodule EmailIaWeb.AuthController do
 
   def delete(conn, _params) do
     conn
+    |> delete_session(:current_user)
+    |> configure_session(renew: true)
     |> put_flash(:info, "You have been logged out!")
-    |> configure_session(drop: true)
     |> redirect(to: ~p"/")
   end
 
