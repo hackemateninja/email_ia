@@ -13,6 +13,6 @@ defmodule EmailIa.Repo.Migrations.CreateGoogleAcounts do
       timestamps(type: :utc_datetime)
     end
 
-    create index(:google_acounts, [:user_id])
+    create index(:google_accounts, [:user_id])
   end
 end

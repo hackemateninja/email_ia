@@ -27,26 +27,13 @@ defmodule EmailIa.User do
     end
   end
 
-  defp find_by_provider_and_uid(_provider, _provider_uid) do
-    # In a real app, you'd query the database
-    # For now, we'll return nil to simulate a new user
-    nil
+  defp find_by_provider_and_uid(provider, provider_uid) do
+    EmailIa.Repo.get_by(__MODULE__, provider: provider, provider_uid: provider_uid)
   end
 
   defp create_user(attrs) do
-    # In a real app, you'd insert into the database
-    # For now, we'll just return the attrs as a user struct
-    user = %__MODULE__{
-      id: :crypto.strong_rand_bytes(16) |> Base.encode16(),
-      email: attrs.email,
-      name: attrs.name,
-      image: attrs.image,
-      provider: attrs.provider,
-      provider_uid: attrs.provider_uid,
-      inserted_at: DateTime.utc_now(),
-      updated_at: DateTime.utc_now()
-    }
-
-    {:ok, user}
+    %__MODULE__{}
+    |> changeset(attrs)
+    |> EmailIa.Repo.insert()
   end
 end
