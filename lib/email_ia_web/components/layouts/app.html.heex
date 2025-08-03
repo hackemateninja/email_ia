@@ -1,27 +1,37 @@
-<header class="px-4 sm:px-6 lg:px-8">
-  <div class="flex items-center justify-between border-b border-zinc-100 py-3 text-sm">
+<header class="bg-black">
+  <div class="flex items-center justify-between border-b py-3 text-sm px-4 sm:px-6 lg:px-8">
     <div class="flex items-center gap-4">
       <a href="/dashboard">
-        <.icon name="hero-at-symbol" />
+        <.icon name="hero-at-symbol" class="text-white" />
       </a>
-      <p class="bg-brand/5 text-brand rounded-full px-2 font-medium leading-6">
+      <p class="bg-brand/5 text-white rounded-full px-2 font-medium leading-6">
         EmailIA
       </p>
     </div>
-    <div class="flex items-center gap-4 font-semibold leading-6 text-zinc-900">
-      <.link navigate={~p"/dashboard"} class="hover:text-zinc-700">
+
+    <div class="flex items-center gap-4 font-semibold leading-6 text-gray-400">
+      <.link navigate={~p"/dashboard"} class={@current_route == :dashboard && "text-white"}>
         Dashboard
       </.link>
-      <.link navigate={~p"/dashboard/emails"} class="hover:text-zinc-700">
+      <.link navigate={~p"/dashboard/emails"} class={@current_route == :emails && "text-white"}>
         Emails
       </.link>
-      <.link navigate={~p"/dashboard/categories"} class="hover:text-zinc-700">
+      <.link
+        navigate={~p"/dashboard/categories"}
+        class={@current_route == :categories && "text-white"}
+      >
         Categories
       </.link>
-      <.link navigate={~p"/dashboard/accounts"} class="hover:text-zinc-700">
+      <.link
+        navigate={~p"/dashboard/accounts"}
+        class={@current_route == :accounts && "text-white"}
+      >
         Accounts
       </.link>
     </div>
+  </div>
+  <div class="h-1/4 py-3 text-sm px-4 sm:px-6 lg:px-8 deco-bg">
+    <h1>Hello</h1>
   </div>
 </header>
 <main class="px-4 sm:px-6 lg:px-8">

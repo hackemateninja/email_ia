@@ -17,13 +17,43 @@ defmodule EmailIaWeb.Router do
   scope "/", EmailIaWeb do
     pipe_through :browser
 
-    get "/", PageController, :home
-    live "/dashboard", DashboardLive
-    live "/dashboard/emails", EmailsLive
-    live "/dashboard/emails/:id", EmailLive, :show
-    live "/dashboard/categories", CategoriesLive
-    live "/dashboard/categories/:id", CategoryLive, :show
-    live "/dashboard/accounts", AccountsLive
+    get "/", AuthController, :signin
+
+    live_session :current_route, on_mount: [EmailIaWeb.CurrentRoute] do
+      scope "/dashboard" do
+        live "/", DashboardLive
+        live "/emails", EmailsLive
+        live "/emails/:id", EmailLive, :show
+        live "/categories", CategoriesLive
+        live "/categories/:id", CategoryLive, :show
+        live "/accounts", AccountsLive
+      end
+    end
+  end
+
+  scope "/", EmailIaWeb do
+    pipe_through [:browser, EmailIaWeb.AuthPlug]
+
+    # Protected routes that require authentication
+    # Add any protected routes here
+    # live_session :current_route, on_mount: [EmailIaWeb.CurrentRoute] do
+    # scope "/dashboard" do
+    #   live "/", DashboardLive
+    #   live "/emails", EmailsLive
+    #   live "/emails/:id", EmailLive, :show
+    #   live "/categories", CategoriesLive
+    #   live "/categories/:id", CategoryLive, :show
+    #   live "/accounts", AccountsLive
+    # end
+    # end
+  end
+
+  scope "/auth", EmailIaWeb do
+    pipe_through :browser
+
+    get "/:provider", AuthController, :request
+    get "/:provider/callback", AuthController, :callback
+    delete "/logout", AuthController, :delete
   end
 
   # Other scopes may use custom stacks.
