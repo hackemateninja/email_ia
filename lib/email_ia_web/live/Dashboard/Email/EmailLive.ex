@@ -21,116 +21,110 @@ defmodule EmailIaWeb.EmailLive do
       />
       
     <!-- Email Content -->
-      <div class="bg-white p-2">
-        <!-- Email Header -->
-        <div class=" pb-2 mb-2">
-          <h2 class="text-lg  text-gray-900 mb-4">{@email.subject}</h2>
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm">
-            <div>
-              <span class="font-light text-xs text-gray-700">From:</span>
-              <span class="text-gray-900 ml-2">{@email.from}</span>
-            </div>
-            <div>
-              <span class="font-light text-xs text-gray-700">To:</span>
-              <span class="text-gray-900 ml-2">{@email.to}</span>
-            </div>
-            <div>
-              <span class="font-light text-xs text-gray-700">Date:</span>
-              <span class="text-gray-900 ml-2">{format_datetime(@email.inserted_at)}</span>
-            </div>
-            <div>
-              <span class="font-light text-xs text-gray-700">Message ID:</span>
-              <span class="text-gray-900 ml-2 font-mono text-xs">{@email.message_id}</span>
-            </div>
+      <!-- Email Header -->
+      <div class="bg-white p-2 mb-2">
+        <h2 class="text-lg  text-gray-700 mb-2">{@email.subject}</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm">
+          <div>
+            <span class="font-light text-xs text-gray-700">From:</span>
+            <span class="text-gray-700 ml-2">{@email.from}</span>
           </div>
-          <%= if @email.category do %>
-            <div class="mt-4">
-              <span class="font-light text-xs text-gray-700">Category:</span>
-              <span class="inline-flex items-center  p-1 text-xs  font-light bg-[#0f62fe] text-white ml-2">
-                {@email.category.name}
-              </span>
-            </div>
-          <% end %>
+          <div>
+            <span class="font-light text-xs text-gray-700">To:</span>
+            <span class="text-gray-700 ml-2">{@email.to}</span>
+          </div>
+          <div>
+            <span class="font-light text-xs text-gray-700">Date:</span>
+            <span class="text-gray-700 ml-2">{format_datetime(@email.inserted_at)}</span>
+          </div>
+          <div>
+            <span class="font-light text-xs text-gray-700">Message ID:</span>
+            <span class="text-gray-700 ml-2 font-mono text-xs">{@email.message_id}</span>
+          </div>
         </div>
-        
-    <!-- AI Summary -->
-        <%= if @email.ai_summary do %>
-          <div class="bg-white border border-gray-200 p-2 mb-2">
-            <div class="flex items-start space-x-4">
-              <div class="flex-shrink-0">
-                <div class="w-10 h-10 bg-[#0f62fe] text-white  flex items-center justify-center">
-                  <.icon name="hero-sparkles" class="w-4 h-4" />
-                </div>
-              </div>
-              <div class="flex-1">
-                <h3 class="text-sm font-semibold  mb-2">AI Summary</h3>
-                <p class=" text-xs ">{@email.ai_summary}</p>
-              </div>
-            </div>
+        <%= if @email.category do %>
+          <div class="mt-2">
+            <span class="font-light text-xs text-gray-700">Category:</span>
+            <span class="inline-flex items-center  p-1 text-xs  font-light bg-[#0f62fe] text-white ml-2">
+              {@email.category.name}
+            </span>
           </div>
         <% end %>
-
-        <div class="bg-white boder border-gray-200 p-2 mb-2">
-          <h3 class="font-semibold text-gray-900 mb-2">Email Snippet</h3>
-          <p class="text-gray-700">{@email.snippet}</p>
-        </div>
-
-        <div class="mb-2">
-          <div class="flex items-center justify-between mb-4">
-            <h3 class="text-lg font-semibold text-gray-900">Original Email Content</h3>
-          </div>
-          <div class="bg-gray-50  p-4 border">
-            <div class="prose max-w-none">
-              <div class="whitespace-pre-wrap text-gray-800">{@email.original_body}</div>
-            </div>
-            <%= if not @show_full_content do %>
-              <div class="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-gray-50 to-transparent">
+      </div>
+      
+    <!-- AI Summary -->
+      <%= if @email.ai_summary do %>
+        <div class="bg-white border border-gray-200 p-2 mb-2">
+          <div class="flex items-start space-x-4">
+            <div class="flex-shrink-0">
+              <div class="w-10 h-10 bg-[#0f62fe] text-white  flex items-center justify-center">
+                <.icon name="hero-sparkles" class="w-4 h-4" />
               </div>
-            <% end %>
+            </div>
+            <div class="flex-1">
+              <h3 class="text-sm font-light ">AI Summary</h3>
+              <p class=" text-xs text-gray-700">{@email.ai_summary}</p>
+            </div>
           </div>
         </div>
-        
-    <!-- Additional Information -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <!-- Unsubscribe Link -->
-          <%= if @email.unsubscribe_link do %>
-            <div class="bg-yellow-50 border border-yellow-200  p-4">
-              <h4 class="font-semibold text-yellow-900 mb-2">Unsubscribe Link</h4>
-              <a
-                href={@email.unsubscribe_link}
-                target="_blank"
-                rel="noopener noreferrer"
-                class="text-yellow-800 hover:text-yellow-900 text-sm break-all"
-              >
-                {@email.unsubscribe_link}
-              </a>
-            </div>
-          <% end %>
-          
-    <!-- Import Information -->
-          <div class="bg-gray-50 border border-gray-200  p-4">
-            <h4 class="font-semibold text-gray-900 mb-2">Import Information</h4>
-            <div class="space-y-2 text-sm">
-              <div>
-                <span class="font-light text-gray-700">Imported:</span>
-                <span class="text-gray-900 ml-2">{format_datetime(@email.imported_at)}</span>
-              </div>
-              <div>
-                <span class="font-light text-gray-700">Status:</span>
-                <span class={[
-                  "ml-2 px-2 py-1  text-xs font-light",
-                  if(@email.archived,
-                    do: "bg-green-100 text-green-800",
-                    else: "bg-blue-100 text-blue-800"
-                  )
-                ]}>
-                  {if @email.archived, do: "Archived", else: "Active"}
-                </span>
-              </div>
-            </div>
+      <% end %>
+
+      <div class="bg-white p-2 mb-2">
+        <h3 class="font-light text-sm text-gray-900 ">Email Snippet</h3>
+        <p class="text-gray-700 text-xs">{@email.snippet}</p>
+      </div>
+
+      <div class="mb-2">
+        <div class="flex items-center justify-between mb-2">
+          <h3 class=" font-light text-gray-700">Original Email Content</h3>
+        </div>
+        <div class="bg-white  p-2">
+          <div class="prose max-w-none">
+            <div class="whitespace-pre-wrap text-xs text-gray-700">{@email.original_body}</div>
           </div>
         </div>
       </div>
+      
+    <!-- Additional Information -->
+      <.dashboard_two_cols>
+        <!-- Unsubscribe Link -->
+        <%= if @email.unsubscribe_link do %>
+          <div class="bg-white  p-2">
+            <h4 class="font-semibold">Unsubscribe Link</h4>
+            <a
+              href={@email.unsubscribe_link}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="text-sm break-all"
+            >
+              {@email.unsubscribe_link}
+            </a>
+          </div>
+        <% end %>
+        
+    <!-- Import Information -->
+        <div class="bg-white  p-2">
+          <h4 class="font-semibold text-gray-900 mb-2">Import Information</h4>
+          <div class="space-y-2 text-sm">
+            <div>
+              <span class="font-light text-gray-700">Imported:</span>
+              <span class="text-gray-900 ml-2">{format_datetime(@email.imported_at)}</span>
+            </div>
+            <div>
+              <span class="font-light text-gray-700">Status:</span>
+              <span class={[
+                "ml-2 px-2 py-1  text-xs font-light",
+                if(@email.archived,
+                  do: "bg-green-100 text-green-800",
+                  else: "bg-blue-100 text-blue-800"
+                )
+              ]}>
+                {if @email.archived, do: "Archived", else: "Active"}
+              </span>
+            </div>
+          </div>
+        </div>
+      </.dashboard_two_cols>
     </.dashboard_container>
     """
   end
