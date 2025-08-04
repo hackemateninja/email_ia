@@ -89,6 +89,7 @@ defmodule EmailIaWeb do
       import Phoenix.HTML
       # Core UI components
       import EmailIaWeb.CoreComponents
+      import EmailIaWeb.DashboardComponents
 
       # Shortcut for generating JS commands
       alias Phoenix.LiveView.JS
