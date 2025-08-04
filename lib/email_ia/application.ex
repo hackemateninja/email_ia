@@ -8,9 +8,9 @@ defmodule EmailIa.Application do
   @impl true
   def start(_type, _args) do
     credentials = %{
-      "refresh_token" => "your_refresh_token_string",
-      "client_id" => "550896010777-…",
-      "client_secret" => "GOCSPX‑M_LUOinsR…"
+      "refresh_token" => System.get_env("GOOGLE_REFRESH_TOKEN"),
+      "client_id" => System.get_env("GOOGLE_CLIENT_ID"),
+      "client_secret" => System.get_env("GOOGLE_CLIENT_SECRET")
     }
 
     children = [
