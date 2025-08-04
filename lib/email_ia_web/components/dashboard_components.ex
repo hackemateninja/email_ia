@@ -195,7 +195,6 @@ defmodule EmailIaWeb.DashboardComponents do
 
   attr :name, :string, required: true
   attr :description, :string, required: true
-  attr :email_count, :integer, required: true
   attr :rest, :global
 
   def dashboard_list_category_item(assigns) do
@@ -207,9 +206,6 @@ defmodule EmailIaWeb.DashboardComponents do
           <p class="text-xs text-gray-500">{@description}</p>
         </div>
       </div>
-      <span class="text-xs font-extralight text-gray-500">
-        {@email_count} emails
-      </span>
     </div>
     """
   end
@@ -230,7 +226,6 @@ defmodule EmailIaWeb.DashboardComponents do
   attr :id, :string, required: true
   attr :name, :string, required: true
   attr :description, :string, required: true
-  attr :email_count, :integer, required: true
   attr :inserted_at, :string, required: true
   attr :edit_category, :any, required: true
   attr :delete_category, :any, required: true
@@ -238,7 +233,7 @@ defmodule EmailIaWeb.DashboardComponents do
 
   def dashboard_category_card(assigns) do
     ~H"""
-    <div {@rest} class="bg-white rounded-none ">
+    <div {@rest} class="bg-white rounded-none " id={"category-#{@id}"}>
       <div class="p-2">
         <div class="flex items-start justify-between mb-2">
           <div class="flex items-center space-x-2">
@@ -247,7 +242,6 @@ defmodule EmailIaWeb.DashboardComponents do
             </div>
             <div>
               <h3 class="text-gray-900 text-sm">{@name}</h3>
-              <p class="text-xs text-gray-500">{@email_count} emails</p>
             </div>
           </div>
           <div class="flex items-center space-x-2">

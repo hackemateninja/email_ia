@@ -1,9 +1,10 @@
-defmodule EmailIaWeb.CategoryLive do
+defmodule EmailIaWeb.Dashboard.Category.CategoryLive do
   use EmailIaWeb, :live_view
+  alias EmailIa.Categories.Category
+  alias EmailIa.Categories
+  alias EmailIa.Emails.Email
   import Ecto.Query
   alias EmailIa.Repo
-  alias EmailIa.Categories.Category
-  alias EmailIa.Emails.Email
 
   def render(assigns) do
     ~H"""
@@ -64,6 +65,22 @@ defmodule EmailIaWeb.CategoryLive do
         />
       </div>
     </.dashboard_container>
+
+    <.modal
+      :if={@live_action in [:edit]}
+      id="category-modal"
+      show
+      on_cancel={JS.patch(~p"/dashboard/categories/#{@category.id}")}
+    >
+      <.live_component
+        module={EmailIaWeb.Dashboard.Category.FormComponent}
+        id={@category.id || :new}
+        title={@page_title}
+        action={@live_action}
+        category={@category}
+        patch={~p"/dashboard/categories/#{@category.id}"}
+      />
+    </.modal>
     """
   end
 

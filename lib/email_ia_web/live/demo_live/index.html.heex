@@ -1,0 +1,42 @@
+<.header>
+  Listing Demos
+  <:actions>
+    <.link patch={~p"/demos/new"}>
+      <.button>New Demo</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.table
+  id="demos"
+  rows={@streams.demos}
+  row_click={fn {_id, demo} -> JS.navigate(~p"/demos/#{demo}") end}
+>
+  <:col :let={{_id, demo}} label="Name">{demo.name}</:col>
+  <:col :let={{_id, demo}} label="Description">{demo.description}</:col>
+  <:action :let={{_id, demo}}>
+    <div class="sr-only">
+      <.link navigate={~p"/demos/#{demo}"}>Show</.link>
+    </div>
+    <.link patch={~p"/demos/#{demo}/edit"}>Edit</.link>
+  </:action>
+  <:action :let={{id, demo}}>
+    <.link
+      phx-click={JS.push("delete", value: %{id: demo.id}) |> hide("##{id}")}
+      data-confirm="Are you sure?"
+    >
+      Delete
+    </.link>
+  </:action>
+</.table>
+
+<.modal :if={@live_action in [:new, :edit]} id="demo-modal" show on_cancel={JS.patch(~p"/demos")}>
+  <.live_component
+    module={EmailIaWeb.DemoLive.FormComponent}
+    id={@demo.id || :new}
+    title={@page_title}
+    action={@live_action}
+    demo={@demo}
+    patch={~p"/demos"}
+  />
+</.modal>

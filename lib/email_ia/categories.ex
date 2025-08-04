@@ -17,8 +17,10 @@ defmodule EmailIa.Categories do
       [%Category{}, ...]
 
   """
-  def list_categories do
-    Repo.all(Category)
+  def list_categories(user_id) do
+    Category
+    |> where(user_id: ^user_id)
+    |> Repo.all()
   end
 
   @doc """
@@ -35,7 +37,9 @@ defmodule EmailIa.Categories do
       ** (Ecto.NoResultsError)
 
   """
-  def get_category!(id), do: Repo.get!(Category, id)
+  def get_category!(id) do
+    Repo.get!(Category, id)
+  end
 
   @doc """
   Creates a category.
@@ -49,8 +53,9 @@ defmodule EmailIa.Categories do
       {:error, %Ecto.Changeset{}}
 
   """
-  def create_category(attrs \\ %{}) do
-    %Category{}
+  def create_category(attrs, user) do
+    user
+    |> Ecto.build_assoc(:categories)
     |> Category.changeset(attrs)
     |> Repo.insert()
   end
