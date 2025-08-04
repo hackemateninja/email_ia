@@ -12,5 +12,6 @@ defmodule EmailIaWeb.CurrentRoute do
   defp current_route(EmailIaWeb.CategoriesLive, _live_action), do: :categories
   defp current_route(EmailIaWeb.CategoryLive, _live_action), do: :email
   defp current_route(EmailIaWeb.AccountsLive, _), do: :accounts
+  defp current_route(EmailIaWeb.GmailLive, _), do: :gmail
   defp current_route(_, _), do: :unknown
 end

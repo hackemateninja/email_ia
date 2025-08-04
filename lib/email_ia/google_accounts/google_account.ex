@@ -18,7 +18,8 @@ defmodule EmailIa.GoogleAccounts.GoogleAccount do
   @doc false
   def changeset(google_account, attrs) do
     google_account
-    |> cast(attrs, [:email, :access_token, :refresh_token, :token_expiry])
-    |> validate_required([:email, :access_token, :refresh_token, :token_expiry])
+    |> cast(attrs, [:email, :access_token, :refresh_token, :token_expiry, :user_id])
+    |> validate_required([:email, :access_token, :refresh_token, :user_id])
+    |> validate_required([:token_expiry], message: "Token expiry is required")
   end
 end

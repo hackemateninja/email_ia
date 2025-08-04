@@ -60,10 +60,31 @@ defmodule EmailIaWeb.AuthController do
             {:ok, user} ->
               IO.puts("User created/found successfully: #{inspect(user)}")
 
-              conn
-              |> put_session(:current_user, user)
-              |> put_flash(:info, "Successfully authenticated with Google!")
-              |> redirect(to: ~p"/dashboard")
+              # Create or update Google account
+              google_account_params = %{
+                email: info.email,
+                access_token: auth.credentials.token,
+                refresh_token: auth.credentials.refresh_token,
+                token_expiry: auth.credentials.expires_at,
+                user_id: user.id
+              }
+
+              case create_or_update_google_account(google_account_params) do
+                {:ok, _google_account} ->
+                  conn
+                  |> put_session(:current_user, user)
+                  |> put_flash(:info, "Successfully authenticated with Google!")
+                  |> redirect(to: ~p"/dashboard")
+
+                {:error, _changeset} ->
+                  conn
+                  |> put_session(:current_user, user)
+                  |> put_flash(
+                    :warning,
+                    "Authenticated but failed to save Gmail access. You may need to reconnect."
+                  )
+                  |> redirect(to: ~p"/dashboard")
+              end
 
             {:error, changeset} ->
               IO.puts("Error creating user: #{inspect(changeset.errors)}")
@@ -83,5 +104,24 @@ defmodule EmailIaWeb.AuthController do
     changeset.errors
     |> Enum.map(fn {field, {message, _}} -> "#{field}: #{message}" end)
     |> Enum.join(", ")
+  end
+
+  defp create_or_update_google_account(params) do
+    alias EmailIa.GoogleAccounts.GoogleAccount
+    alias EmailIa.Repo
+
+    case Repo.get_by(GoogleAccount, user_id: params.user_id) do
+      nil ->
+        # Create new Google account
+        %GoogleAccount{}
+        |> GoogleAccount.changeset(params)
+        |> Repo.insert()
+
+      existing_account ->
+        # Update existing Google account
+        existing_account
+        |> GoogleAccount.changeset(params)
+        |> Repo.update()
+    end
   end
 end
