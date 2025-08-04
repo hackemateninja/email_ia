@@ -71,9 +71,6 @@ defmodule EmailIaWeb.EmailsLive do
                   </path>
                 </svg>
                 <span>Gmail Integration</span>
-                <span class="bg-yellow-100 text-yellow-800 py-0.5 px-2.5 rounded-full text-xs font-medium">
-                  Coming Soon
-                </span>
               </div>
             </button>
           </nav>
@@ -251,37 +248,171 @@ defmodule EmailIaWeb.EmailsLive do
             </div>
           <% else %>
             <!-- Gmail Integration Tab -->
-            <div class="text-center py-16">
-              <div class="w-24 h-24 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                <svg
-                  class="w-12 h-12 text-yellow-600"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"
-                  >
-                  </path>
-                </svg>
+            <div>
+              <!-- Gmail Account Status -->
+              <div class="bg-white border border-gray-200 rounded-lg p-6 mb-6">
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center space-x-4">
+                    <div class="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center">
+                      <.icon name="hero-envelope" class="w-6 h-6 text-red-600" />
+                    </div>
+                    <div>
+                      <h3 class="text-lg font-semibold text-gray-900">Gmail Account</h3>
+                      <p class="text-sm text-gray-500">
+                        {if @google_account,
+                          do: @google_account.email,
+                          else: "No Gmail account connected"}
+                      </p>
+                    </div>
+                  </div>
+                  <div class="text-right">
+                    <div class="text-2xl font-bold text-gray-900">{@gmail_emails_count}</div>
+                    <div class="text-sm text-gray-500">Gmail Emails</div>
+                  </div>
+                </div>
               </div>
-              <h3 class="text-xl font-semibold text-gray-900 mb-2">
-                Gmail Integration Coming Soon
-              </h3>
-              <p class="text-gray-600 mb-6">
-                We're working on integrating with Gmail to automatically fetch and process your emails.
-              </p>
-              <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4 max-w-md mx-auto">
-                <h4 class="font-medium text-yellow-900 mb-2">What's coming:</h4>
-                <ul class="text-sm text-yellow-800 space-y-1">
-                  <li>• Automatic email fetching from Gmail</li>
-                  <li>• Real-time email processing</li>
-                  <li>• AI-powered email categorization</li>
-                  <li>• Smart email filtering and search</li>
-                </ul>
+              
+    <!-- Fetch Emails Section -->
+              <div class="bg-white border border-gray-200 rounded-lg p-6 mb-6">
+                <div class="flex items-center justify-between mb-4">
+                  <div>
+                    <h3 class="text-lg font-semibold text-gray-900">Fetch Gmail Emails</h3>
+                    <p class="text-sm text-gray-600">Import emails from your Gmail account</p>
+                  </div>
+                  <button
+                    phx-click="fetch_gmail_emails"
+                    class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg font-medium flex items-center space-x-2 transition-colors"
+                  >
+                    <.icon name="hero-arrow-down-tray" class="w-4 h-4" />
+                    <span>Fetch Emails</span>
+                  </button>
+                </div>
+
+                <%= if @fetching_emails do %>
+                  <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                    <div class="flex items-center space-x-3">
+                      <div class="animate-spin rounded-full h-5 w-5 border-b-2 border-blue-600"></div>
+                      <span class="text-blue-800">Fetching emails from Gmail...</span>
+                    </div>
+                  </div>
+                <% end %>
+              </div>
+              
+    <!-- Gmail Emails List -->
+              <div class="bg-white border border-gray-200 rounded-lg">
+                <div class="p-6 border-b border-gray-200">
+                  <div class="flex items-center justify-between">
+                    <h3 class="text-lg font-semibold text-gray-900">Gmail Emails</h3>
+                    <div class="flex items-center space-x-4">
+                      <!-- Search -->
+                      <div class="relative">
+                        <input
+                          type="text"
+                          placeholder="Search Gmail emails..."
+                          phx-keyup="search_gmail_emails"
+                          phx-debounce="300"
+                          class="w-64 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+                        />
+                        <.icon
+                          name="hero-magnifying-glass"
+                          class="absolute right-3 top-2.5 w-5 h-5 text-gray-400"
+                        />
+                      </div>
+                      <!-- Sort -->
+                      <select
+                        phx-change="sort_gmail_emails"
+                        class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+                      >
+                        <option value="inserted_at">Date</option>
+                        <option value="subject">Subject</option>
+                        <option value="from">Sender</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="divide-y divide-gray-200">
+                  <%= if Enum.empty?(@gmail_emails) do %>
+                    <.dashboard_empty_page
+                      icon="hero-envelope"
+                      title="No Gmail emails found"
+                      description="Fetch emails from your Gmail account to get started"
+                      button_text="Fetch Emails"
+                      button_action={JS.push("fetch_gmail_emails")}
+                    />
+                  <% else %>
+                    <%= for email <- @gmail_emails do %>
+                      <div class="p-6 hover:bg-gray-50 transition-colors">
+                        <div class="flex items-start justify-between">
+                          <div class="flex-1 min-w-0">
+                            <div class="flex items-center space-x-3 mb-2">
+                              <h3 class="text-lg font-semibold text-gray-900 truncate">
+                                {email.subject}
+                              </h3>
+                              <%= if email.archived do %>
+                                <span class="px-2 py-1 bg-orange-100 text-orange-800 text-xs rounded-full">
+                                  Archived
+                                </span>
+                              <% end %>
+                            </div>
+                            <p class="text-sm text-gray-600 mb-2">From: {email.from}</p>
+                            <p class="text-sm text-gray-500 mb-3 line-clamp-2">{email.snippet}</p>
+                            
+    <!-- AI Summary -->
+                            <%= if email.ai_summary && email.ai_summary != "" do %>
+                              <div class="bg-blue-50 border border-blue-200 rounded-lg p-3 mb-3">
+                                <div class="flex items-start space-x-2">
+                                  <.icon name="hero-sparkles" class="w-4 h-4 text-blue-500" />
+                                  <div class="flex-1">
+                                    <h4 class="text-sm font-medium text-blue-900 mb-1">AI Summary</h4>
+                                    <p class="text-sm text-blue-800">{email.ai_summary}</p>
+                                  </div>
+                                </div>
+                              </div>
+                            <% end %>
+
+                            <div class="flex items-center space-x-4 text-xs text-gray-400">
+                              <span>{format_datetime(email.inserted_at)}</span>
+                              <span>•</span>
+                              <span>To: {email.to}</span>
+                              <%= if email.unsubscribe_link && email.unsubscribe_link != "" do %>
+                                <span>•</span>
+                                <a
+                                  href={email.unsubscribe_link}
+                                  class="text-blue-600 hover:text-blue-800"
+                                >
+                                  Unsubscribe
+                                </a>
+                              <% end %>
+                            </div>
+                          </div>
+                          <div class="flex items-center space-x-2 ml-4">
+                            <button
+                              phx-click="view_gmail_email"
+                              phx-value-id={email.id}
+                              class="text-purple-600 hover:text-purple-800 text-sm font-medium"
+                            >
+                              View Details
+                            </button>
+                            <button
+                              phx-click="toggle_gmail_archive"
+                              phx-value-id={email.id}
+                              class={[
+                                "px-3 py-1 rounded text-sm font-medium transition-colors",
+                                if(email.archived,
+                                  do: "bg-green-100 text-green-800 hover:bg-green-200",
+                                  else: "bg-gray-100 text-gray-800 hover:bg-gray-200"
+                                )
+                              ]}
+                            >
+                              {if email.archived, do: "Unarchive", else: "Archive"}
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    <% end %>
+                  <% end %>
+                </div>
               </div>
             </div>
           <% end %>
@@ -295,6 +426,8 @@ defmodule EmailIaWeb.EmailsLive do
     current_user = socket.assigns.current_user
 
     emails = fetch_archived_emails(current_user.id)
+    google_account = get_user_google_account(current_user.id)
+    gmail_emails = fetch_gmail_emails(current_user.id)
 
     socket =
       assign(socket,
@@ -309,7 +442,13 @@ defmodule EmailIaWeb.EmailsLive do
         selected_emails: [],
         show_email_modal: false,
         show_original_modal: false,
-        selected_email: nil
+        selected_email: nil,
+        google_account: google_account,
+        gmail_emails: gmail_emails,
+        gmail_emails_count: length(gmail_emails),
+        fetching_emails: false,
+        gmail_search: "",
+        gmail_sort_by: "inserted_at"
       )
 
     {:ok, socket}
@@ -520,5 +659,140 @@ defmodule EmailIaWeb.EmailsLive do
 
   defp format_datetime(datetime) do
     Calendar.strftime(datetime, "%b %d, %Y at %I:%M %p")
+  end
+
+  # Gmail Integration Functions
+  defp get_user_google_account(user_id) do
+    Repo.get_by(GoogleAccount, user_id: user_id)
+  end
+
+  defp fetch_gmail_emails(user_id) do
+    Repo.all(
+      from(e in Email,
+        join: ga in GoogleAccount,
+        on: e.google_account_id == ga.id,
+        left_join: c in Category,
+        on: e.category_id == c.id,
+        where: ga.user_id == ^user_id,
+        preload: [category: c],
+        order_by: [desc: e.inserted_at]
+      )
+    )
+  end
+
+  # Gmail Event Handlers
+  def handle_event("fetch_gmail_emails", _params, socket) do
+    current_user = socket.assigns.current_user
+
+    socket = assign(socket, fetching_emails: true)
+
+    case EmailIa.GmailService.fetch_all_emails(current_user.id) do
+      {:ok, count} ->
+        # Refresh the Gmail emails data
+        gmail_emails = fetch_gmail_emails(current_user.id)
+        google_account = get_user_google_account(current_user.id)
+
+        socket =
+          socket
+          |> assign(:gmail_emails, gmail_emails)
+          |> assign(:gmail_emails_count, length(gmail_emails))
+          |> assign(:google_account, google_account)
+          |> assign(:fetching_emails, false)
+          |> put_flash(:info, "Successfully fetched #{count} emails from Gmail!")
+
+        {:noreply, socket}
+
+      {:error, :no_google_account} ->
+        socket = assign(socket, fetching_emails: false)
+
+        {:noreply,
+         put_flash(
+           socket,
+           :error,
+           "No Google account found. Please connect your Gmail account first."
+         )}
+
+      {:error, reason} ->
+        socket = assign(socket, fetching_emails: false)
+        {:noreply, put_flash(socket, :error, "Failed to fetch emails: #{reason}")}
+    end
+  end
+
+  def handle_event("search_gmail_emails", %{"value" => search}, socket) do
+    socket = assign(socket, gmail_search: search)
+
+    gmail_emails =
+      filter_and_sort_gmail_emails(
+        socket.assigns.gmail_emails,
+        search,
+        socket.assigns.gmail_sort_by
+      )
+
+    {:noreply, assign(socket, gmail_emails: gmail_emails)}
+  end
+
+  def handle_event("sort_gmail_emails", %{"value" => sort_by}, socket) do
+    socket = assign(socket, gmail_sort_by: sort_by)
+
+    gmail_emails =
+      filter_and_sort_gmail_emails(
+        socket.assigns.gmail_emails,
+        socket.assigns.gmail_search,
+        sort_by
+      )
+
+    {:noreply, assign(socket, gmail_emails: gmail_emails)}
+  end
+
+  def handle_event("view_gmail_email", %{"id" => email_id}, socket) do
+    {:noreply, push_navigate(socket, to: "/dashboard/emails/#{email_id}")}
+  end
+
+  def handle_event("toggle_gmail_archive", %{"id" => email_id}, socket) do
+    email = Repo.get(Email, email_id)
+
+    if email do
+      updated_email = Repo.update!(Ecto.Changeset.change(email, archived: !email.archived))
+
+      # Refresh the Gmail emails list
+      current_user = socket.assigns.current_user
+      gmail_emails = fetch_gmail_emails(current_user.id)
+
+      socket =
+        socket
+        |> assign(:gmail_emails, gmail_emails)
+        |> put_flash(
+          :info,
+          "Email #{if updated_email.archived, do: "archived", else: "unarchived"} successfully!"
+        )
+
+      {:noreply, socket}
+    else
+      {:noreply, put_flash(socket, :error, "Email not found")}
+    end
+  end
+
+  defp filter_and_sort_gmail_emails(emails, search, sort_by) do
+    emails
+    |> Enum.filter(fn email ->
+      search == "" or
+        String.contains?(String.downcase(email.subject), String.downcase(search)) or
+        String.contains?(String.downcase(email.from), String.downcase(search)) or
+        String.contains?(String.downcase(email.snippet), String.downcase(search))
+    end)
+    |> Enum.sort_by(
+      fn email ->
+        case sort_by do
+          "subject" -> email.subject
+          "from" -> email.from
+          "inserted_at" -> email.inserted_at
+          _ -> email.inserted_at
+        end
+      end,
+      case sort_by do
+        "inserted_at" -> :desc
+        _ -> :asc
+      end
+    )
   end
 end
