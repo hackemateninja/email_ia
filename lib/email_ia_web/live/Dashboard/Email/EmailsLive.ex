@@ -19,7 +19,7 @@ defmodule EmailIaWeb.EmailsLive do
       />
       
     <!-- Tabs -->
-      <div class="bg-white rounded-xl shadow-lg mb-6">
+      <div class="bg-white rounded-none shadow-lg mb-6">
         <div class="border-b border-gray-200">
           <nav class="flex space-x-8 px-6" aria-label="Tabs">
             <button
@@ -34,15 +34,7 @@ defmodule EmailIaWeb.EmailsLive do
               ]}
             >
               <div class="flex items-center space-x-2">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-14 0h14"
-                  >
-                  </path>
-                </svg>
+                <.icon name="hero-envelope" class="w-5 h-5" />
                 <span>Archived Emails</span>
                 <span class="bg-gray-100 text-gray-900 py-0.5 px-2.5 rounded-full text-xs font-medium">
                   {@archived_count}
@@ -61,15 +53,7 @@ defmodule EmailIaWeb.EmailsLive do
               ]}
             >
               <div class="flex items-center space-x-2">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
-                  >
-                  </path>
-                </svg>
+                <.icon name="hero-envelope" class="w-5 h-5" />
                 <span>Gmail Integration</span>
               </div>
             </button>
@@ -86,20 +70,7 @@ defmodule EmailIaWeb.EmailsLive do
                 <div class="flex items-center space-x-4 flex-1">
                   <div class="relative flex-1 max-w-md">
                     <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                      <svg
-                        class="h-5 w-5 text-gray-400"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          stroke-width="2"
-                          d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                        >
-                        </path>
-                      </svg>
+                      <.icon name="hero-magnifying-glass" class="h-5 w-5 text-gray-400" />
                     </div>
                     <input
                       type="text"
@@ -107,13 +78,13 @@ defmodule EmailIaWeb.EmailsLive do
                       phx-keyup="search_emails"
                       phx-debounce="300"
                       value={@search}
-                      class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+                      class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
                     />
                   </div>
                   <select
                     phx-change="filter_by_category"
                     value={@selected_category}
-                    class="border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+                    class="border border-gray-300 rounded-none px-3 py-2 focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
                   >
                     <option value="">All Categories</option>
                     <%= for category <- @categories do %>
@@ -123,7 +94,7 @@ defmodule EmailIaWeb.EmailsLive do
                   <select
                     phx-change="sort_emails"
                     value={@sort_by}
-                    class="border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+                    class="border border-gray-300 rounded-none px-3 py-2 focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
                   >
                     <option value="inserted_at">Date</option>
                     <option value="subject">Subject</option>
@@ -142,22 +113,14 @@ defmodule EmailIaWeb.EmailsLive do
                     <label for="select-all" class="text-sm text-gray-700">Select All</label>
                   </div>
                   <%= if length(@selected_emails) > 0 do %>
-                    <button
+                    <.dashboard_button
                       phx-click="bulk_delete"
                       data-confirm="Are you sure you want to delete the selected emails? This action cannot be undone."
-                      class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg font-medium flex items-center space-x-2 transition-colors"
+                      kind={:danger}
                     >
-                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          stroke-width="2"
-                          d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-                        >
-                        </path>
-                      </svg>
+                      <.icon name="hero-trash" class="w-4 h-4" />
                       <span>Delete Selected ({length(@selected_emails)})</span>
-                    </button>
+                    </.dashboard_button>
                   <% end %>
                 </div>
               </div>
@@ -166,7 +129,7 @@ defmodule EmailIaWeb.EmailsLive do
               <div class="space-y-4">
                 <%= for email <- @emails do %>
                   <div class={[
-                    "bg-white border rounded-lg p-4 transition-all duration-200",
+                    "bg-white border rounded-none p-4 transition-all duration-200",
                     if(email.id in @selected_emails,
                       do: "ring-2 ring-purple-500 border-purple-300",
                       else: "border-gray-200 hover:border-gray-300"
@@ -250,10 +213,10 @@ defmodule EmailIaWeb.EmailsLive do
             <!-- Gmail Integration Tab -->
             <div>
               <!-- Gmail Account Status -->
-              <div class="bg-white border border-gray-200 rounded-lg p-6 mb-6">
+              <div class="bg-white border border-gray-200 rounded-none p-6 mb-6">
                 <div class="flex items-center justify-between">
                   <div class="flex items-center space-x-4">
-                    <div class="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center">
+                    <div class="w-12 h-12 bg-red-100 rounded-none flex items-center justify-center">
                       <.icon name="hero-envelope" class="w-6 h-6 text-red-600" />
                     </div>
                     <div>
@@ -273,23 +236,20 @@ defmodule EmailIaWeb.EmailsLive do
               </div>
               
     <!-- Fetch Emails Section -->
-              <div class="bg-white border border-gray-200 rounded-lg p-6 mb-6">
+              <div class="bg-white border border-gray-200 rounded-none p-6 mb-6">
                 <div class="flex items-center justify-between mb-4">
                   <div>
                     <h3 class="text-lg font-semibold text-gray-900">Fetch Gmail Emails</h3>
                     <p class="text-sm text-gray-600">Import emails from your Gmail account</p>
                   </div>
-                  <button
-                    phx-click="fetch_gmail_emails"
-                    class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg font-medium flex items-center space-x-2 transition-colors"
-                  >
+                  <.dashboard_button phx-click="fetch_gmail_emails">
                     <.icon name="hero-arrow-down-tray" class="w-4 h-4" />
                     <span>Fetch Emails</span>
-                  </button>
+                  </.dashboard_button>
                 </div>
 
                 <%= if @fetching_emails do %>
-                  <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                  <div class="bg-blue-50 border border-blue-200 rounded-none p-4">
                     <div class="flex items-center space-x-3">
                       <div class="animate-spin rounded-full h-5 w-5 border-b-2 border-blue-600"></div>
                       <span class="text-blue-800">Fetching emails from Gmail...</span>
@@ -299,7 +259,7 @@ defmodule EmailIaWeb.EmailsLive do
               </div>
               
     <!-- Gmail Emails List -->
-              <div class="bg-white border border-gray-200 rounded-lg">
+              <div class="bg-white border border-gray-200 rounded-none">
                 <div class="p-6 border-b border-gray-200">
                   <div class="flex items-center justify-between">
                     <h3 class="text-lg font-semibold text-gray-900">Gmail Emails</h3>
@@ -311,7 +271,7 @@ defmodule EmailIaWeb.EmailsLive do
                           placeholder="Search Gmail emails..."
                           phx-keyup="search_gmail_emails"
                           phx-debounce="300"
-                          class="w-64 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+                          class="w-64 px-4 py-2 border border-gray-300 rounded-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
                         />
                         <.icon
                           name="hero-magnifying-glass"
@@ -321,7 +281,7 @@ defmodule EmailIaWeb.EmailsLive do
                       <!-- Sort -->
                       <select
                         phx-change="sort_gmail_emails"
-                        class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+                        class="px-4 py-2 border border-gray-300 rounded-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
                       >
                         <option value="inserted_at">Date</option>
                         <option value="subject">Subject</option>

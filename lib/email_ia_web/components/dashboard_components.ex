@@ -325,6 +325,18 @@ defmodule EmailIaWeb.DashboardComponents do
     """
   end
 
+  attr :title, :string, required: true
+  attr :value, :string, required: true
+
+  def dashboard_account_summary_data(assigns) do
+    ~H"""
+    <div class="flex justify-between items-center py-2 border-b border-gray-100">
+      <span class="text-gray-600 text-xs">{@title}</span>
+      <span class="font-extralight text-gray-900 text-xs">{@value}</span>
+    </div>
+    """
+  end
+
   attr :kind, :atom, values: [:primary, :black, :danger], default: :primary
   attr :rest, :global
   slot :inner_block, required: true
