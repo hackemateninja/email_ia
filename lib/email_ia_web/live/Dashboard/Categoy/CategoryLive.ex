@@ -4,7 +4,6 @@ defmodule EmailIaWeb.CategoryLive do
   alias EmailIa.Repo
   alias EmailIa.Categories.Category
   alias EmailIa.Emails.Email
-  alias EmailIa.GoogleAccounts.GoogleAccount
 
   def render(assigns) do
     ~H"""
@@ -13,7 +12,6 @@ defmodule EmailIaWeb.CategoryLive do
       <.dashboard_header_with_back_actions
         name={@category.name}
         description={@category.description}
-        back_action={JS.push("navigate_to_categories")}
         first_icon="hero-pencil"
         second_icon="hero-trash"
         first_button_text="Edit"
@@ -48,35 +46,14 @@ defmodule EmailIaWeb.CategoryLive do
 
       <div class="space-y-2">
         <%= for email <- @emails do %>
-          <div class=" bg-white rounded-none  p-2 ">
-            <div class="flex items-start justify-between">
-              <div class="flex-1 min-w-0">
-                <div class="flex items-center space-x-2 mb-2">
-                  <div class="w-8 h-8 bg-[#0f62fe]  text-white flex items-center justify-center">
-                    <.icon name="hero-envelope" class="w-4 h-4" />
-                  </div>
-                  <div class="flex-1 min-w-0">
-                    <h4 class="text-xs  text-gray-900 truncate">{email.subject}</h4>
-                    <p class="text-xs text-gray-500">From: {email.from}</p>
-                  </div>
-                </div>
-                <p class="text-xs text-gray-600 line-clamp-2">{email.snippet}</p>
-                <div class="flex items-center space-x-2 mt-2 text-xs text-gray-400">
-                  <span>{format_datetime(email.inserted_at)}</span>
-                  <span>•</span>
-                  <span>To: {email.to}</span>
-                </div>
-              </div>
-              <div class="flex items-center space-x-2 ml-2">
-                <.link
-                  navigate={~p"/dashboard/emails/#{email.id}"}
-                  class="text-gray-500 hover:text-[#0f62fe] text-xs font-extralight"
-                >
-                  View
-                </.link>
-              </div>
-            </div>
-          </div>
+          <.dashboard_email_card
+            subject={email.subject}
+            from={email.from}
+            snippet={email.snippet}
+            inserted_at={email.inserted_at}
+            id={email.id}
+            to={email.to}
+          />
         <% end %>
 
         <.dashboard_empty_page

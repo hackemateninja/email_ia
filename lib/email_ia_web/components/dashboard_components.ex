@@ -55,7 +55,6 @@ defmodule EmailIaWeb.DashboardComponents do
 
   attr :name, :string, required: true
   attr :description, :string, required: true
-  attr :back_action, :any, required: true
   attr :first_icon, :string, required: true
   attr :second_icon, :string, required: true
   attr :first_button_text, :string, required: true
@@ -278,6 +277,47 @@ defmodule EmailIaWeb.DashboardComponents do
             <span class="text-xs text-gray-600 hover:text-[#0f62fe] cursor-pointer">
               View Details
             </span>
+          </.link>
+        </div>
+      </div>
+    </div>
+    """
+  end
+
+  attr :subject, :string, required: true
+  attr :from, :string, required: true
+  attr :snippet, :string, required: true
+  attr :inserted_at, :string, required: true
+  attr :id, :string, required: true
+  attr :to, :string, required: true
+
+  def dashboard_email_card(assigns) do
+    ~H"""
+    <div class=" bg-white rounded-none  p-2 ">
+      <div class="flex items-start justify-between">
+        <div class="flex-1 min-w-0">
+          <div class="flex items-center space-x-2 mb-2">
+            <div class="w-8 h-8 bg-[#0f62fe]  text-white flex items-center justify-center">
+              <.icon name="hero-envelope" class="w-4 h-4" />
+            </div>
+            <div class="flex-1 min-w-0">
+              <h4 class="text-xs  text-gray-900 truncate">{@subject}</h4>
+              <p class="text-xs text-gray-500">From: {@from}</p>
+            </div>
+          </div>
+          <p class="text-xs text-gray-600 line-clamp-2">{@snippet}</p>
+          <div class="flex items-center space-x-2 mt-2 text-xs text-gray-400">
+            <span>{format_datetime(@inserted_at)}</span>
+            <span>•</span>
+            <span>To: {@to}</span>
+          </div>
+        </div>
+        <div class="flex items-center space-x-0-2 ml-2">
+          <.link
+            navigate={"/dashboard/emails/#{@id}"}
+            class="text-gray-500 hover:text-[#0f62fe] text-xs font-extralight"
+          >
+            View
           </.link>
         </div>
       </div>
