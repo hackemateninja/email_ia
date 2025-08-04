@@ -14,6 +14,7 @@ defmodule EmailIaWeb.CategoriesLive do
         description="Organize your emails with custom categories"
         button_text="Add Category"
         button_action={JS.push("show_create_modal")}
+        icon="hero-plus"
       />
       
     <!-- Categories Grid -->

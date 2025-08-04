@@ -10,23 +10,13 @@ defmodule EmailIaWeb.EmailsLive do
     ~H"""
     <.dashboard_container>
       <!-- Header -->
-      <div class="mb-8">
-        <div class="flex items-center justify-between">
-          <div>
-            <h1 class="text-4xl font-bold text-gray-900 mb-2">Emails</h1>
-            <p class="text-gray-600">Manage and organize your email collection</p>
-          </div>
-          <div class="flex items-center space-x-3">
-            <button
-              phx-click="refresh_emails"
-              class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium flex items-center space-x-2 transition-colors"
-            >
-              <.icon name="hero-arrow-path" class="w-4 h-4" />
-              <span>Refresh</span>
-            </button>
-          </div>
-        </div>
-      </div>
+      <.dashboard_header_with_action
+        title="Emails"
+        description="Manage and organize your email collection"
+        button_text="Refresh"
+        button_action={JS.push("refresh_emails")}
+        icon="hero-arrow-path"
+      />
       
     <!-- Tabs -->
       <div class="bg-white rounded-xl shadow-lg mb-6">

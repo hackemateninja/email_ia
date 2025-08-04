@@ -34,6 +34,7 @@ defmodule EmailIaWeb.DashboardComponents do
   attr :description, :string, required: true
   attr :button_text, :string, required: true
   attr :button_action, :any, required: true
+  attr :icon, :string, required: true
 
   def dashboard_header_with_action(assigns) do
     ~H"""
@@ -44,9 +45,55 @@ defmodule EmailIaWeb.DashboardComponents do
           <p class="text-gray-600 font-light text-sm">{@description}</p>
         </div>
         <.dashboard_button phx-click={@button_action}>
-          <.icon name="hero-plus" class="w-4 h-4" />
+          <.icon name={@icon} class="w-4 h-4" />
           <span>{@button_text}</span>
         </.dashboard_button>
+      </div>
+    </div>
+    """
+  end
+
+  attr :name, :string, required: true
+  attr :description, :string, required: true
+  attr :back_action, :any, required: true
+  attr :first_icon, :string, required: true
+  attr :second_icon, :string, required: true
+  attr :first_button_text, :string, required: true
+  attr :second_button_text, :string, required: true
+  attr :navigate, :string, required: true
+  attr :back_text, :string, required: true
+  attr :first_button_action, :any, required: true
+  attr :second_button_action, :any, required: true
+
+  def dashboard_header_with_back_actions(assigns) do
+    ~H"""
+    <div class="mb-8">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center space-x-2">
+          <.link navigate={@navigate}>
+            <.icon name="hero-arrow-left" class="w-4 h-4" />
+            <span class="text-gray-600 text-sm">Back to {@back_text}</span>
+          </.link>
+          <div class="w-px h-6 bg-gray-300"></div>
+          <div>
+            <h1 class="text-3xl   text-gray-900">{@name}</h1>
+            <p class="text-gray-600">{@description}</p>
+          </div>
+        </div>
+        <div class="flex items-center space-x-2">
+          <.dashboard_button phx-click={@first_button_action}>
+            <.icon name={@first_icon} class="w-4 h-4" />
+            <span>{@first_button_text}</span>
+          </.dashboard_button>
+          <.dashboard_button
+            phx-click={@second_button_action}
+            kind={:danger}
+            data-confirm="Are you sure you want to delete this category? This action cannot be undone."
+          >
+            <.icon name={@second_icon} class="w-4 h-4" />
+            <span>{@second_button_text}</span>
+          </.dashboard_button>
+        </div>
       </div>
     </div>
     """
@@ -98,7 +145,7 @@ defmodule EmailIaWeb.DashboardComponents do
         </div>
         <div class="ml-2">
           <p class="text-xs text-gray-600">{@title}</p>
-          <p class="text-lg  text-gray-900">{@value}</p>
+          <p class="text-sm  text-gray-900">{@value}</p>
         </div>
       </div>
     </div>
@@ -192,15 +239,15 @@ defmodule EmailIaWeb.DashboardComponents do
 
   def dashboard_category_card(assigns) do
     ~H"""
-    <div {@rest} class="bg-white rounded-none hover:shadow-xl transition-shadow duration-300">
+    <div {@rest} class="bg-white rounded-none ">
       <div class="p-2">
         <div class="flex items-start justify-between mb-2">
           <div class="flex items-center space-x-2">
             <div class="w-10 h-10 bg-[#0f62fe] text-white rounded-none flex items-center justify-center">
-              <.icon name="hero-tag" class="w-4 h-4" />
+              <.icon name="hero-tag" class="w-5 h-5" />
             </div>
             <div>
-              <h3 class="font-semibold text-gray-900">{@name}</h3>
+              <h3 class="text-gray-900 text-sm">{@name}</h3>
               <p class="text-xs text-gray-500">{@email_count} emails</p>
             </div>
           </div>
@@ -260,8 +307,8 @@ defmodule EmailIaWeb.DashboardComponents do
   attr :icon, :string, required: true
   attr :title, :string, required: true
   attr :description, :string, required: true
-  attr :button_text, :string, required: true
-  attr :button_action, :any, required: true
+  attr :button_text, :string, default: nil
+  attr :button_action, :any, default: nil
 
   def dashboard_empty_page(assigns) do
     ~H"""
@@ -273,9 +320,11 @@ defmodule EmailIaWeb.DashboardComponents do
       <p class="text-gray-600 mb-4 text-sm">
         {@description}
       </p>
-      <.dashboard_button phx-click={@button_action}>
-        <span>{@button_text}</span>
-      </.dashboard_button>
+      <%= if @button_text && @button_action do %>
+        <.dashboard_button phx-click={@button_action}>
+          <span>{@button_text}</span>
+        </.dashboard_button>
+      <% end %>
     </div>
     """
   end
