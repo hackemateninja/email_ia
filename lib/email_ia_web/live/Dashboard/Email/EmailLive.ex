@@ -21,32 +21,32 @@ defmodule EmailIaWeb.EmailLive do
       />
       
     <!-- Email Content -->
-      <div class="bg-white rounded-xl shadow-lg p-8">
+      <div class="bg-white p-2">
         <!-- Email Header -->
-        <div class="border-b border-gray-200 pb-6 mb-6">
-          <h2 class="text-3xl font-bold text-gray-900 mb-4">{@email.subject}</h2>
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+        <div class=" pb-2 mb-2">
+          <h2 class="text-lg  text-gray-900 mb-4">{@email.subject}</h2>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm">
             <div>
-              <span class="font-medium text-gray-700">From:</span>
+              <span class="font-light text-xs text-gray-700">From:</span>
               <span class="text-gray-900 ml-2">{@email.from}</span>
             </div>
             <div>
-              <span class="font-medium text-gray-700">To:</span>
+              <span class="font-light text-xs text-gray-700">To:</span>
               <span class="text-gray-900 ml-2">{@email.to}</span>
             </div>
             <div>
-              <span class="font-medium text-gray-700">Date:</span>
+              <span class="font-light text-xs text-gray-700">Date:</span>
               <span class="text-gray-900 ml-2">{format_datetime(@email.inserted_at)}</span>
             </div>
             <div>
-              <span class="font-medium text-gray-700">Message ID:</span>
+              <span class="font-light text-xs text-gray-700">Message ID:</span>
               <span class="text-gray-900 ml-2 font-mono text-xs">{@email.message_id}</span>
             </div>
           </div>
           <%= if @email.category do %>
             <div class="mt-4">
-              <span class="font-medium text-gray-700">Category:</span>
-              <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-purple-100 text-purple-800 ml-2">
+              <span class="font-light text-xs text-gray-700">Category:</span>
+              <span class="inline-flex items-center  p-1 text-xs  font-light bg-[#0f62fe] text-white ml-2">
                 {@email.category.name}
               </span>
             </div>
@@ -55,10 +55,10 @@ defmodule EmailIaWeb.EmailLive do
         
     <!-- AI Summary -->
         <%= if @email.ai_summary do %>
-          <div class="bg-blue-50 border border-blue-200 rounded-lg p-6 mb-6">
+          <div class="bg-blue-50 border border-blue-200  p-2 mb-2">
             <div class="flex items-start space-x-4">
               <div class="flex-shrink-0">
-                <div class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
+                <div class="w-10 h-10 bg-blue-100  flex items-center justify-center">
                   <svg
                     class="w-6 h-6 text-blue-600"
                     fill="none"
@@ -84,42 +84,17 @@ defmodule EmailIaWeb.EmailLive do
         <% end %>
         
     <!-- Email Snippet -->
-        <div class="bg-gray-50 rounded-lg p-4 mb-6">
+        <div class="bg-gray-50  p-2 mb-2">
           <h3 class="font-semibold text-gray-900 mb-2">Email Snippet</h3>
           <p class="text-gray-700">{@email.snippet}</p>
         </div>
         
     <!-- Original Email Content -->
-        <div class="mb-6">
+        <div class="mb-2">
           <div class="flex items-center justify-between mb-4">
             <h3 class="text-lg font-semibold text-gray-900">Original Email Content</h3>
-            <button
-              phx-click="toggle_content_view"
-              class="text-purple-600 hover:text-purple-800 text-sm font-medium flex items-center space-x-1"
-            >
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-                >
-                </path>
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
-                >
-                </path>
-              </svg>
-              <span>{if @show_full_content, do: "Show Less", else: "Show More"}</span>
-            </button>
           </div>
-          <div class={[
-            "bg-gray-50 rounded-lg p-4 border",
-            if(@show_full_content, do: "", else: "max-h-64 overflow-hidden")
-          ]}>
+          <div class="bg-gray-50  p-4 border">
             <div class="prose max-w-none">
               <div class="whitespace-pre-wrap text-gray-800">{@email.original_body}</div>
             </div>
@@ -134,7 +109,7 @@ defmodule EmailIaWeb.EmailLive do
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
           <!-- Unsubscribe Link -->
           <%= if @email.unsubscribe_link do %>
-            <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+            <div class="bg-yellow-50 border border-yellow-200  p-4">
               <h4 class="font-semibold text-yellow-900 mb-2">Unsubscribe Link</h4>
               <a
                 href={@email.unsubscribe_link}
@@ -148,17 +123,17 @@ defmodule EmailIaWeb.EmailLive do
           <% end %>
           
     <!-- Import Information -->
-          <div class="bg-gray-50 border border-gray-200 rounded-lg p-4">
+          <div class="bg-gray-50 border border-gray-200  p-4">
             <h4 class="font-semibold text-gray-900 mb-2">Import Information</h4>
             <div class="space-y-2 text-sm">
               <div>
-                <span class="font-medium text-gray-700">Imported:</span>
+                <span class="font-light text-gray-700">Imported:</span>
                 <span class="text-gray-900 ml-2">{format_datetime(@email.imported_at)}</span>
               </div>
               <div>
-                <span class="font-medium text-gray-700">Status:</span>
+                <span class="font-light text-gray-700">Status:</span>
                 <span class={[
-                  "ml-2 px-2 py-1 rounded-full text-xs font-medium",
+                  "ml-2 px-2 py-1  text-xs font-light",
                   if(@email.archived,
                     do: "bg-green-100 text-green-800",
                     else: "bg-blue-100 text-blue-800"
