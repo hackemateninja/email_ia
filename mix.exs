@@ -16,6 +16,7 @@ defmodule EmailIa.MixProject do
   # Configuration for the OTP application.
   #
   # Type `mix help compile.app` for more information.
+
   def application do
     [
       mod: {EmailIa.Application, []},
@@ -56,8 +57,11 @@ defmodule EmailIa.MixProject do
       {:telemetry_poller, "~> 1.0"},
       {:gettext, "~> 0.26"},
       {:jason, "~> 1.2"},
+      {:goth, "~> 1.4"},
+      {:google_api_gmail, "~> 0.17.0"},
       {:dns_cluster, "~> 0.1.1"},
       {:bandit, "~> 1.5"},
+      {:dotenv, "~> 3.0.0", only: [:dev, :test]},
       {:ueberauth, "~> 0.10"},
       {:ueberauth_google, "~> 0.12"}
     ]

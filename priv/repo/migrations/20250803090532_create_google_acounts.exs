@@ -5,8 +5,9 @@ defmodule EmailIa.Repo.Migrations.CreateGoogleAcounts do
     create table(:google_accounts, primary_key: false) do
       add :id, :binary_id, primary_key: true
       add :email, :string
-      add :access_token, :text
-      add :refresh_token, :text
+      add :access_token, :string
+      add :refresh_token, :string
+      add :provider_uid, :string
       add :token_expiry, :utc_datetime
       add :user_id, references(:users, on_delete: :nothing, type: :binary_id)
 

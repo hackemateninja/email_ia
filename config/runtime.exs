@@ -20,6 +20,11 @@ if System.get_env("PHX_SERVER") do
   config :email_ia, EmailIaWeb.Endpoint, server: true
 end
 
+# Google API Configuration
+# config :ueberauth, Ueberauth.Strategy.Google.OAuth,
+#   client_id: System.get_env("GOOGLE_CLIENT_ID"),
+#   client_secret: System.get_env("GOOGLE_CLIENT_SECRET")
+
 if config_env() == :prod do
   database_url =
     System.get_env("DATABASE_URL") ||

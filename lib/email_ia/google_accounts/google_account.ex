@@ -8,7 +8,9 @@ defmodule EmailIa.GoogleAccounts.GoogleAccount do
     field :email, :string
     field :access_token, :string
     field :refresh_token, :string
+    field :provider_uid, :string
     field :token_expiry, :utc_datetime
+
     belongs_to :user, EmailIa.User
     has_many :emails, EmailIa.Emails.Email
 
@@ -16,10 +18,14 @@ defmodule EmailIa.GoogleAccounts.GoogleAccount do
   end
 
   @doc false
-  def changeset(google_account, attrs) do
-    google_account
-    |> cast(attrs, [:email, :access_token, :refresh_token, :token_expiry, :user_id])
-    |> validate_required([:email, :access_token, :refresh_token, :user_id])
-    |> validate_required([:token_expiry], message: "Token expiry is required")
+  @required_params ~w(provider_uid email access_token user_id)a
+  @optional_params ~w(refresh_token token_expiry)a
+
+  def changeset(account, attrs) do
+    account
+    |> cast(attrs, @required_params ++ @optional_params)
+    |> validate_required(@required_params)
+    |> unique_constraint(:user_id)
+    |> unique_constraint(:provider_uid)
   end
 end

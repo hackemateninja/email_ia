@@ -1,4 +1,6 @@
 defmodule EmailIaWeb.AuthController do
+  alias EmailIa.GoogleAccounts.GoogleAccount
+  alias EmailIa.{Repo, User}
   use EmailIaWeb, :controller
   plug Ueberauth
 
@@ -34,20 +36,6 @@ defmodule EmailIaWeb.AuthController do
 
     case auth do
       %Ueberauth.Auth{provider: :google, info: info} ->
-        user_params = %{
-          email: info.email,
-          name: info.name,
-          image: info.image,
-          provider: "google",
-          provider_uid: auth.uid
-        }
-
-        # Debug logging
-        IO.puts("=== Auth Callback Debug ===")
-        IO.puts("Auth info: #{inspect(info)}")
-        IO.puts("Auth UID: #{auth.uid}")
-        IO.puts("User params: #{inspect(user_params)}")
-
         # Validate required fields
         if is_nil(info.email) or info.email == "" do
           IO.puts("ERROR: Email is missing from OAuth response")
@@ -56,20 +44,33 @@ defmodule EmailIaWeb.AuthController do
           |> put_flash(:error, "Email is required for authentication")
           |> redirect(to: ~p"/")
         else
-          case EmailIa.User.find_or_create_by_oauth(user_params) do
+          user_params = %{
+            email: info.email,
+            name: info.name,
+            image: info.image,
+            provider: "google",
+            provider_uid: auth.uid
+          }
+
+          case find_or_create_user(user_params) do
             {:ok, user} ->
               IO.puts("User created/found successfully: #{inspect(user)}")
 
-              # Create or update Google account
+              token_expiry =
+                auth.credentials.expires_at
+                |> DateTime.from_unix!(:second)
+                |> DateTime.truncate(:second)
+
               google_account_params = %{
                 email: info.email,
                 access_token: auth.credentials.token,
                 refresh_token: auth.credentials.refresh_token,
-                token_expiry: auth.credentials.expires_at,
-                user_id: user.id
+                token_expiry: token_expiry,
+                user_id: user.id,
+                provider_uid: auth.uid
               }
 
-              case create_or_update_google_account(google_account_params) do
+              case find_or_create_google_account(google_account_params) do
                 {:ok, _google_account} ->
                   conn
                   |> put_session(:current_user, user)
@@ -78,21 +79,22 @@ defmodule EmailIaWeb.AuthController do
 
                 {:error, _changeset} ->
                   conn
-                  |> put_session(:current_user, user)
+                  |> clear_session()
                   |> put_flash(
-                    :warning,
+                    :error,
                     "Authenticated but failed to save Gmail access. You may need to reconnect."
                   )
-                  |> redirect(to: ~p"/dashboard")
+                  |> redirect(to: ~p"/")
               end
 
             {:error, changeset} ->
               IO.puts("Error creating user: #{inspect(changeset.errors)}")
 
               conn
+              |> clear_session()
               |> put_flash(
                 :error,
-                "Error creating user account: #{format_changeset_errors(changeset)}"
+                "Error creating user account: #{inspect(changeset)}"
               )
               |> redirect(to: ~p"/")
           end
@@ -100,26 +102,29 @@ defmodule EmailIaWeb.AuthController do
     end
   end
 
-  defp format_changeset_errors(changeset) do
-    changeset.errors
-    |> Enum.map(fn {field, {message, _}} -> "#{field}: #{message}" end)
-    |> Enum.join(", ")
+  defp find_or_create_user(params) do
+    case Repo.get_by(User, email: params.email) do
+      nil ->
+        %User{}
+        |> User.changeset(params)
+        |> Repo.insert()
+
+      user ->
+        user
+        |> User.changeset(params)
+        |> Repo.update()
+    end
   end
 
-  defp create_or_update_google_account(params) do
-    alias EmailIa.GoogleAccounts.GoogleAccount
-    alias EmailIa.Repo
-
+  defp find_or_create_google_account(params) do
     case Repo.get_by(GoogleAccount, user_id: params.user_id) do
       nil ->
-        # Create new Google account
         %GoogleAccount{}
         |> GoogleAccount.changeset(params)
         |> Repo.insert()
 
-      existing_account ->
-        # Update existing Google account
-        existing_account
+      google_account ->
+        google_account
         |> GoogleAccount.changeset(params)
         |> Repo.update()
     end

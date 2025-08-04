@@ -7,6 +7,12 @@ defmodule EmailIa.Application do
 
   @impl true
   def start(_type, _args) do
+    credentials = %{
+      "refresh_token" => "your_refresh_token_string",
+      "client_id" => "550896010777-…",
+      "client_secret" => "GOCSPX‑M_LUOinsR…"
+    }
+
     children = [
       EmailIaWeb.Telemetry,
       EmailIa.Repo,
@@ -14,6 +20,7 @@ defmodule EmailIa.Application do
       {Phoenix.PubSub, name: EmailIa.PubSub},
       # Start the Finch HTTP client for sending emails
       {Finch, name: EmailIa.Finch},
+      {Goth, name: GmailGoth, source: {:refresh_token, credentials, []}},
       # Start a worker by calling: EmailIa.Worker.start_link(arg)
       # {EmailIa.Worker, arg},
       # Start to serve requests, typically the last entry
