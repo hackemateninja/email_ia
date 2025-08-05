@@ -8,9 +8,12 @@ defmodule EmailIaWeb.AccountsLive do
   def render(assigns) do
     ~H"""
     <.dashboard_container>
-      <.dashboard_header
+      <.dashboard_header_with_action
         title="Account Management"
         description="Manage your account and connected Google accounts"
+        button_text="Add another account"
+        button_action=""
+        icon="hero-plus"
       />
 
       <div class="bg-white p-2 mb-2">
@@ -93,20 +96,8 @@ defmodule EmailIaWeb.AccountsLive do
     {:ok, socket}
   end
 
-  def handle_event("show_add_google_modal", _params, socket) do
-    socket = assign(socket, show_add_google_modal: true)
-    {:noreply, socket}
-  end
 
-  def handle_event("hide_add_google_modal", _params, socket) do
-    socket = assign(socket, show_add_google_modal: false)
-    {:noreply, socket}
-  end
 
-  def handle_event("edit_user_account", _params, socket) do
-    # For now, just show a flash message
-    {:noreply, put_flash(socket, :info, "User profile editing will be available soon!")}
-  end
 
   def handle_event("disconnect_account", %{"id" => id}, socket) do
     current_user = socket.assigns.current_user

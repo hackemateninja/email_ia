@@ -16,6 +16,23 @@ import Config
 #
 # Alternatively, you can use `mix phx.gen.release` to generate a `bin/server`
 # script that automatically sets the env var above.
+
+# dotenv = Dotenv.load
+
+# %{"GOOGLE_CLIENT_ID" => google_id, "GOOGLE_CLIENT_SECRET" => google_secret} =  dotenv.values
+
+
+# client_id =
+#   System.get_env("GOOGLE_CLIENT_ID") || "#{google_id}"
+
+# client_secret =
+#   System.get_env("GOOGLE_CLIENT_SECRET") || "#{google_secret}"
+
+# config :ueberauth, Ueberauth.Strategy.Google.OAuth,
+#   client_id: client_id,
+#   client_secret: client_secret
+
+
 if System.get_env("PHX_SERVER") do
   config :email_ia, EmailIaWeb.Endpoint, server: true
 end

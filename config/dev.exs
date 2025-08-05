@@ -3,7 +3,7 @@ import Config
 # Configure your database
 config :email_ia, EmailIa.Repo,
   username: "postgres",
-  password: "postgres",
+  password: "1234",
   hostname: "localhost",
   database: "email_ia_dev",
   stacktrace: true,

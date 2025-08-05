@@ -7,11 +7,12 @@ defmodule EmailIa.Application do
 
   @impl true
   def start(_type, _args) do
-    credentials = %{
-      "refresh_token" => System.get_env("GOOGLE_REFRESH_TOKEN"),
-      "client_id" => System.get_env("GOOGLE_CLIENT_ID"),
-      "client_secret" => System.get_env("GOOGLE_CLIENT_SECRET")
-    }
+
+    if Mix.env == :dev do
+      Dotenv.load
+      Mix.Task.run("loadconfig")
+    end
+
 
     children = [
       EmailIaWeb.Telemetry,
@@ -20,7 +21,7 @@ defmodule EmailIa.Application do
       {Phoenix.PubSub, name: EmailIa.PubSub},
       # Start the Finch HTTP client for sending emails
       {Finch, name: EmailIa.Finch},
-      {Goth, name: GmailGoth, source: {:refresh_token, credentials, []}},
+      #{Goth, name: GmailGoth, source: {:refresh_token, credentials, []}},
       # Start a worker by calling: EmailIa.Worker.start_link(arg)
       # {EmailIa.Worker, arg},
       # Start to serve requests, typically the last entry
