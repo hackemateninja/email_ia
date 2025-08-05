@@ -6,6 +6,7 @@ defmodule EmailIaWeb.DashboardLive do
   alias EmailIa.GoogleAccounts.GoogleAccount
   alias EmailIa.Emails.Email
 
+  @impl true
   def render(assigns) do
     ~H"""
     <.dashboard_container>
@@ -14,20 +15,20 @@ defmodule EmailIaWeb.DashboardLive do
         title={"Welcome back, #{@current_user.name}!"}
         description="Here's an overview of your email management"
       />
-      
+
     <!-- Stats Cards -->
       <.dashboard_four_cols>
         <!-- Total Emails -->
         <.dashboard_stat_card title="Total Emails" icon="hero-envelope" value={@total_emails} />
         <!-- Google Accounts -->
         <.dashboard_stat_card title="Google Accounts" icon="hero-user-plus" value={@total_accounts} />
-        
+
     <!-- Categories -->
         <.dashboard_stat_card title="Categories" icon="hero-tag" value={@total_categories} />
         <!-- Archived Emails -->
         <.dashboard_stat_card title="Archived" icon="hero-archive-box" value={@archived_emails} />
       </.dashboard_four_cols>
-      
+
     <!-- Recent Activity Section -->
       <.dashboard_two_cols>
         <!-- Recent Emails -->
@@ -45,14 +46,13 @@ defmodule EmailIaWeb.DashboardLive do
             message="No emails yet"
           />
         </.dashboard_list_card>
-        
+
     <!-- Categories Overview -->
         <.dashboard_list_card title="Categories" link="/dashboard/categories">
           <.dashboard_list_category_item
             :for={category <- @categories}
             name={category.name}
             description={category.description}
-            email_count={category.email_count}
           />
 
           <.dashboard_list_empty
@@ -66,6 +66,7 @@ defmodule EmailIaWeb.DashboardLive do
     """
   end
 
+  @impl true
   def mount(_params, _session, socket) do
     current_user = socket.assigns.current_user
 
@@ -163,7 +164,4 @@ defmodule EmailIaWeb.DashboardLive do
     }
   end
 
-  defp format_datetime(datetime) do
-    Calendar.strftime(datetime, "%b %d, %Y at %I:%M %p")
-  end
 end

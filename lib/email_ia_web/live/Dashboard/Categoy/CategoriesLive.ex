@@ -27,7 +27,7 @@ defmodule EmailIaWeb.Dashboard.Category.CategoriesLive do
             name={category.name}
             description={category.description}
             inserted_at={category.inserted_at}
-            edit_category={JS.patch(~p"/dashboard/categories/#{category.id}/show/edit")}
+            edit_category={JS.patch(~p"/dashboard/categories/#{category.id}/edit")}
             delete_category={JS.push("delete", value: %{id: category.id})}
           />
         <% end %>

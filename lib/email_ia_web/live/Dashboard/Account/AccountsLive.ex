@@ -5,6 +5,7 @@ defmodule EmailIaWeb.AccountsLive do
   alias EmailIa.GoogleAccounts.GoogleAccount
   alias EmailIa.Emails.Email
 
+  @impl true
   def render(assigns) do
     ~H"""
     <.dashboard_container>
@@ -77,6 +78,7 @@ defmodule EmailIaWeb.AccountsLive do
     """
   end
 
+  @impl true
   def mount(_params, _session, socket) do
     current_user = socket.assigns.current_user
 
@@ -127,7 +129,8 @@ defmodule EmailIaWeb.AccountsLive do
     end
   end
 
-  def handle_event("refresh_token", %{"id" => id}, socket) do
+  @impl true
+  def handle_event("refresh_token", %{"id" => _id}, socket) do
     # For now, just show a flash message
     {:noreply, put_flash(socket, :info, "Token refresh functionality will be available soon!")}
   end
@@ -221,12 +224,7 @@ defmodule EmailIaWeb.AccountsLive do
     Repo.delete(account)
   end
 
-  defp is_token_expired(account) do
-    case account.token_expiry do
-      nil -> true
-      expiry -> DateTime.compare(DateTime.utc_now(), expiry) == :gt
-    end
-  end
+
 
   defp format_datetime(datetime) do
     Calendar.strftime(datetime, "%b %d, %Y at %I:%M %p")

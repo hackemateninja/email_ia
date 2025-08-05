@@ -30,7 +30,7 @@
   </:action>
 </.table>
 
-<.modal :if={@live_action in [:new, :edit]} id="demo-modal" show on_cancel={JS.patch(~p"/demos")}>
+<.modal :if={@live_action in [:new, :edit]} id="demo-modal" show on_cancel={JS.patch(~p"/dashboard/demos")}>
   <.live_component
     module={EmailIaWeb.DemoLive.FormComponent}
     id={@demo.id || :new}
