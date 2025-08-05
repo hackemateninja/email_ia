@@ -17,12 +17,12 @@ defmodule EmailIaWeb.Dashboard.Category.CategoryLive do
         second_icon="hero-trash"
         first_button_text="Edit"
         second_button_text="Delete"
-        first_button_action={JS.push("edit_category")}
-        second_button_action={JS.push("delete_category")}
+        first_button_action={JS.patch(~p"/dashboard/categories/#{@category.id}/show/edit")}
+        second_button_action={JS.push("delete", value: %{id: @category.id})}
         navigate={~p"/dashboard/categories"}
         back_text="Categories"
       />
-      
+
     <!-- Category Stats -->
       <.dashboard_four_cols>
         <.dashboard_stat_card title="Total Emails" icon="hero-envelope" value={@total_emails} />
@@ -38,7 +38,7 @@ defmodule EmailIaWeb.Dashboard.Category.CategoryLive do
         />
         <.dashboard_stat_card title="Recent Activity" icon="hero-clock" value={@recent_emails_count} />
       </.dashboard_four_cols>
-      
+
     <!-- Emails Section -->
 
       <div class="flex items-center justify-between mb-2">
@@ -115,50 +115,25 @@ defmodule EmailIaWeb.Dashboard.Category.CategoryLive do
     end
   end
 
-  def handle_event("edit_category", _params, socket) do
-    socket = assign(socket, show_edit_modal: true)
-    {:noreply, socket}
+
+  @impl true
+  def handle_params(%{"id" => id}, _, socket) do
+    {:noreply,
+     socket
+     |> assign(:page_title, page_title(socket.assigns.live_action))
+    |> assign(:category, Categories.get_category!(id))}
   end
 
-  def handle_event("hide_edit_modal", _params, socket) do
-    socket = assign(socket, show_edit_modal: false)
-    {:noreply, socket}
+  @impl true
+  def handle_event("delete", %{"id" => id}, socket) do
+    category = Categories.get_category!(id)
+    {:ok, _} = Categories.delete_category(category)
+
+    {:noreply, push_navigate(socket, to: "/dashboard/categories")}
   end
 
-  def handle_event("update_category", %{"name" => name, "description" => description}, socket) do
-    category = socket.assigns.category
-    params = %{name: name, description: description}
-
-    case update_category(category, params) do
-      {:ok, updated_category} ->
-        socket =
-          assign(socket,
-            show_edit_modal: false,
-            category: updated_category,
-            category_form: %{
-              "name" => updated_category.name,
-              "description" => updated_category.description
-            }
-          )
-
-        {:noreply, put_flash(socket, :info, "Category updated successfully!")}
-
-      {:error, _changeset} ->
-        {:noreply, put_flash(socket, :error, "Failed to update category. Please try again.")}
-    end
-  end
-
-  def handle_event("delete_category", _params, socket) do
-    category = socket.assigns.category
-
-    case delete_category(category) do
-      {:ok, _category} ->
-        {:noreply, push_navigate(socket, to: "/dashboard/categories")}
-
-      {:error, _changeset} ->
-        {:noreply, put_flash(socket, :error, "Failed to delete category. Please try again.")}
-    end
-  end
+  defp page_title(:show), do: "Show Category"
+  defp page_title(:edit), do: "Edit Category"
 
   defp fetch_category_emails(category_id) do
     Repo.all(
@@ -169,15 +144,6 @@ defmodule EmailIaWeb.Dashboard.Category.CategoryLive do
     )
   end
 
-  defp update_category(category, params) do
-    category
-    |> Category.changeset(params)
-    |> Repo.update()
-  end
-
-  defp delete_category(category) do
-    Repo.delete(category)
-  end
 
   defp format_datetime(datetime) do
     Calendar.strftime(datetime, "%b %d, %Y")
