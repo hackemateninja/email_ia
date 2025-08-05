@@ -6,6 +6,7 @@ defmodule EmailIaWeb.Dashboard.Category.CategoryLive do
   import Ecto.Query
   alias EmailIa.Repo
 
+  @impl true
   def render(assigns) do
     ~H"""
     <.dashboard_container>
@@ -84,6 +85,7 @@ defmodule EmailIaWeb.Dashboard.Category.CategoryLive do
     """
   end
 
+  @impl true
   def mount(%{"id" => id}, _session, socket) do
     current_user = socket.assigns.current_user
     category = Repo.get(Category, id)
