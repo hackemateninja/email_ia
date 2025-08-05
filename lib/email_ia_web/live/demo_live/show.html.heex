@@ -2,7 +2,7 @@
   Demo {@demo.id}
   <:subtitle>This is a demo record from your database.</:subtitle>
   <:actions>
-    <.link patch={~p"/demos/#{@demo}/show/edit"} phx-click={JS.push_focus()}>
+    <.link patch={~p"/dashboard/demos/#{@demo}/show/edit"} phx-click={JS.push_focus()}>
       <.button>Edit demo</.button>
     </.link>
   </:actions>
@@ -13,15 +13,15 @@
   <:item title="Description">{@demo.description}</:item>
 </.list>
 
-<.back navigate={~p"/demos"}>Back to demos</.back>
+<.back navigate={~p"/dashboard/demos"}>Back to demos</.back>
 
-<.modal :if={@live_action == :edit} id="demo-modal" show on_cancel={JS.patch(~p"/demos/#{@demo}")}>
+<.modal :if={@live_action == :edit} id="demo-modal" show on_cancel={JS.patch(~p"/dashboard/demos/#{@demo}")}>
   <.live_component
     module={EmailIaWeb.DemoLive.FormComponent}
     id={@demo.id}
     title={@page_title}
     action={@live_action}
     demo={@demo}
-    patch={~p"/demos/#{@demo}"}
+    patch={~p"/dashboard/demos/#{@demo}"}
   />
 </.modal>

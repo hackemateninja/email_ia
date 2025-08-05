@@ -17,12 +17,13 @@ defmodule EmailIaWeb.Dashboard.Category.CategoriesLive do
         button_action={JS.patch(~p"/dashboard/categories/new")}
         icon="hero-plus"
       />
-      
+
     <!-- Categories Grid -->
       <.dashboard_three_cols id="categories" phx-update="stream">
         <%= for {id, category} <- @streams.categories do %>
           <.dashboard_category_card
-            id={category.id}
+            id={id}
+            category_id={category.id}
             name={category.name}
             description={category.description}
             inserted_at={category.inserted_at}
@@ -31,7 +32,7 @@ defmodule EmailIaWeb.Dashboard.Category.CategoriesLive do
           />
         <% end %>
       </.dashboard_three_cols>
-      
+
     <!-- Empty State -->
 
       <.dashboard_empty_page

@@ -287,7 +287,7 @@ defmodule EmailIaWeb.DashboardComponents do
     """
   end
 
-  attr :id, :string, required: true
+  attr :category_id, :string, required: true
   attr :name, :string, required: true
   attr :description, :string, required: true
   attr :inserted_at, :string, required: true
@@ -297,7 +297,7 @@ defmodule EmailIaWeb.DashboardComponents do
 
   def dashboard_category_card(assigns) do
     ~H"""
-    <div {@rest} class="bg-white rounded-none " id={"category-#{@id}"}>
+    <div {@rest}  class="bg-white rounded-none " >
       <div class="p-2">
         <div class="flex items-start justify-between mb-2">
           <div class="flex items-center space-x-2">
@@ -331,7 +331,7 @@ defmodule EmailIaWeb.DashboardComponents do
           <span class="text-xs font-extralight text-gray-400">
             Created {format_date(@inserted_at)}
           </span>
-          <.link navigate={"/dashboard/categories/#{@id}"}>
+          <.link navigate={"/dashboard/categories/#{@category_id}"}>
             <span class="text-xs text-gray-600 hover:text-[#0f62fe] cursor-pointer">
               View Details
             </span>

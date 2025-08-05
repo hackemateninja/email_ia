@@ -1,7 +1,7 @@
 <.header>
   Listing Demos
   <:actions>
-    <.link patch={~p"/demos/new"}>
+    <.link patch={~p"/dashboard/demos/new"}>
       <.button>New Demo</.button>
     </.link>
   </:actions>
@@ -10,7 +10,7 @@
 <.table
   id="demos"
   rows={@streams.demos}
-  row_click={fn {_id, demo} -> JS.navigate(~p"/demos/#{demo}") end}
+  row_click={fn {_id, demo} -> JS.navigate(~p"/dashboard/demos/#{demo}") end}
 >
   <:col :let={{_id, demo}} label="Name">{demo.name}</:col>
   <:col :let={{_id, demo}} label="Description">{demo.description}</:col>
@@ -37,6 +37,6 @@
     title={@page_title}
     action={@live_action}
     demo={@demo}
-    patch={~p"/demos"}
+    patch={~p"/dashboard/demos"}
   />
 </.modal>
