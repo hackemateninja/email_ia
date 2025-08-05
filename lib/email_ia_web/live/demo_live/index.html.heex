@@ -16,9 +16,9 @@
   <:col :let={{_id, demo}} label="Description">{demo.description}</:col>
   <:action :let={{_id, demo}}>
     <div class="sr-only">
-      <.link navigate={~p"/demos/#{demo}"}>Show</.link>
+      <.link navigate={~p"/dashboard/demos/#{demo}"}>Show</.link>
     </div>
-    <.link patch={~p"/demos/#{demo}/edit"}>Edit</.link>
+    <.link patch={~p"/dashboard/demos/#{demo}/edit"}>Edit</.link>
   </:action>
   <:action :let={{id, demo}}>
     <.link

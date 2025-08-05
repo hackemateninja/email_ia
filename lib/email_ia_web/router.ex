@@ -39,6 +39,7 @@ defmodule EmailIaWeb.Router do
         live "/accounts", AccountsLive
         live "/demos", DemoLive.Index, :index
         live "/demos/new", DemoLive.Index, :new
+        live "/demos/:id/edit", DemoLive.Index, :edit
         live "/demos/:id", DemoLive.Show, :show
         live "/demos/:id/show/edit", DemoLive.Show, :edit
       end
