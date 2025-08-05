@@ -210,6 +210,70 @@ defmodule EmailIaWeb.DashboardComponents do
     """
   end
 
+
+  attr :is_active, :boolean, required: true
+  attr :text, :string, required: true
+  attr :icon, :string, required: true
+  attr :action, :any, required: true
+  attr :count, :integer, default: nil
+
+  def dashboard_tab_item(assigns) do
+    ~H"""
+     <button
+      phx-click={@action}
+      class={[
+        "py-2 px-1 border-b-2 font-light text-sm transition-colors",
+        if(@is_active,
+          do: "border-[#0F62FE]  text-[#0F62FE]",
+          else: "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
+        )
+      ]}
+    >
+      <div class="flex items-center space-x-2">
+        <.icon name={@icon} class="w-4 h-4" />
+        <span>{@text}</span>
+        <span :if={@count} class="bg-gray-100 text-gray-900 py-0.5 px-2.5 rounded-full text-xs font-medium">
+          {@count}
+        </span>
+      </div>
+    </button>
+    """
+  end
+
+
+  attr :active_tab, :string, required: true
+  attr :count, :integer, required: true
+  attr :first_action, :any, required: true
+  attr :second_action, :any, required: true
+  attr :first_icon, :string, required: true
+  attr :second_icon, :string, required: true
+  attr :first_text, :string, required: true
+  attr :second_text, :string, required: true
+  attr :first_value, :string, required: true
+  attr :second_value, :string, required: true
+
+  def dashboard_tabs(assigns) do
+    ~H"""
+      <div class="border-b border-gray-200">
+        <nav class="flex space-x-2 px-2" aria-label="Tabs">
+          <.dashboard_tab_item
+            is_active={@active_tab == @first_value}
+            text={@first_text}
+            icon={@first_icon}
+            action={@first_action}
+            count={@count}
+          />
+          <.dashboard_tab_item
+            is_active={@active_tab == @second_value}
+            text={@second_text}
+            icon={@second_icon}
+            action={@second_action}
+          />
+        </nav>
+      </div>
+    """
+  end
+
   attr :icon, :string, required: true
   attr :message, :string, required: true
   attr :rest, :global

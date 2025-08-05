@@ -6,6 +6,11 @@ defmodule EmailIaWeb.EmailsLive do
   alias EmailIa.GoogleAccounts.GoogleAccount
   alias EmailIa.Categories.Category
 
+  @first_tab "archived"
+  @second_tab "gmail"
+  @first_tab_text "Archived Emails"
+  @second_tab_text "Gmail Integration"
+
   def render(assigns) do
     ~H"""
     <.dashboard_container>
@@ -17,57 +22,31 @@ defmodule EmailIaWeb.EmailsLive do
         button_action={JS.push("refresh_emails")}
         icon="hero-arrow-path"
       />
-      
+
     <!-- Tabs -->
-      <div class="bg-white rounded-none shadow-lg mb-6">
-        <div class="border-b border-gray-200">
-          <nav class="flex space-x-8 px-6" aria-label="Tabs">
-            <button
-              phx-click="switch_tab"
-              phx-value-tab="archived"
-              class={[
-                "py-4 px-1 border-b-2 font-medium text-sm transition-colors",
-                if(@active_tab == "archived",
-                  do: "border-purple-500 text-purple-600",
-                  else: "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
-                )
-              ]}
-            >
-              <div class="flex items-center space-x-2">
-                <.icon name="hero-envelope" class="w-5 h-5" />
-                <span>Archived Emails</span>
-                <span class="bg-gray-100 text-gray-900 py-0.5 px-2.5 rounded-full text-xs font-medium">
-                  {@archived_count}
-                </span>
-              </div>
-            </button>
-            <button
-              phx-click="switch_tab"
-              phx-value-tab="gmail"
-              class={[
-                "py-4 px-1 border-b-2 font-medium text-sm transition-colors",
-                if(@active_tab == "gmail",
-                  do: "border-purple-500 text-purple-600",
-                  else: "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
-                )
-              ]}
-            >
-              <div class="flex items-center space-x-2">
-                <.icon name="hero-envelope" class="w-5 h-5" />
-                <span>Gmail Integration</span>
-              </div>
-            </button>
-          </nav>
-        </div>
-        
+      <div class="bg-white rounded-none shadow-lg mb-2">
+
+        <.dashboard_tabs
+          first_text={@first_tab_text}
+          first_icon="hero-envelope"
+          second_text={@second_tab_text}
+          second_icon="hero-envelope"
+          active_tab={@active_tab}
+          first_action={JS.push("switch_tab", value: %{tab: @first_tab})}
+          second_action={JS.push("switch_tab", value: %{tab: @second_tab})}
+          first_value={@first_tab}
+          second_value={@second_tab}
+          count={@gmail_emails_count}
+        />
+
     <!-- Tab Content -->
-        <div class="p-6">
-          <%= if @active_tab == "archived" do %>
+        <div class="p-2">
+          <%= if @active_tab == @first_tab do %>
             <!-- Archived Emails Tab -->
             <div>
               <!-- Search and Filters -->
-              <div class="flex items-center justify-between mb-6">
-                <div class="flex items-center space-x-4 flex-1">
+              <div class="flex items-center justify-between mb-2">
+                <div class="flex items-center space-x-2 flex-1">
                   <div class="relative flex-1 max-w-md">
                     <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                       <.icon name="hero-magnifying-glass" class="h-5 w-5 text-gray-400" />
@@ -78,13 +57,13 @@ defmodule EmailIaWeb.EmailsLive do
                       phx-keyup="search_emails"
                       phx-debounce="300"
                       value={@search}
-                      class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+                      class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-none focus:ring-2 focus:ring-[#0F62FE] focus:border-[#0F62FE]"
                     />
                   </div>
                   <select
                     phx-change="filter_by_category"
                     value={@selected_category}
-                    class="border border-gray-300 rounded-none px-3 py-2 focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+                    class="border border-gray-300 rounded-none px-3 py-2 focus:ring-2 focus:ring-[#0F62FE] focus:border-[#0F62FE]"
                   >
                     <option value="">All Categories</option>
                     <%= for category <- @categories do %>
@@ -94,7 +73,7 @@ defmodule EmailIaWeb.EmailsLive do
                   <select
                     phx-change="sort_emails"
                     value={@sort_by}
-                    class="border border-gray-300 rounded-none px-3 py-2 focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+                    class="border border-gray-300 rounded-none px-3 py-2 focus:ring-2 focus:ring-[#0F62FE] focus:border-[#0F62FE]"
                   >
                     <option value="inserted_at">Date</option>
                     <option value="subject">Subject</option>
@@ -108,7 +87,7 @@ defmodule EmailIaWeb.EmailsLive do
                       id="select-all"
                       phx-click="toggle_select_all"
                       checked={@select_all}
-                      class="rounded border-gray-300 text-purple-600 focus:ring-purple-500"
+                      class="rounded border-gray-300 text-[#0F62FE] focus:ring-[#0F62FE]"
                     />
                     <label for="select-all" class="text-sm text-gray-700">Select All</label>
                   </div>
@@ -124,14 +103,14 @@ defmodule EmailIaWeb.EmailsLive do
                   <% end %>
                 </div>
               </div>
-              
+
     <!-- Emails List -->
               <div class="space-y-4">
                 <%= for email <- @emails do %>
                   <div class={[
                     "bg-white border rounded-none p-4 transition-all duration-200",
                     if(email.id in @selected_emails,
-                      do: "ring-2 ring-purple-500 border-purple-300",
+                      do: "ring-2 ring-[#0F62FE] border-purple-300",
                       else: "border-gray-200 hover:border-gray-300"
                     )
                   ]}>
@@ -143,7 +122,7 @@ defmodule EmailIaWeb.EmailsLive do
                           phx-click="toggle_email_selection"
                           phx-value-id={email.id}
                           checked={email.id in @selected_emails}
-                          class="rounded border-gray-300 text-purple-600 focus:ring-purple-500"
+                          class="rounded border-gray-300 text-[#0F62FE] focus:ring-[#0F62FE]"
                         />
                       </div>
                       <div class="flex-1 min-w-0">
@@ -167,7 +146,7 @@ defmodule EmailIaWeb.EmailsLive do
                         </div>
 
                         <p class="text-sm text-gray-600 mb-3 line-clamp-2">{email.snippet}</p>
-                        
+
     <!-- AI Summary -->
                         <%= if email.ai_summary do %>
                           <div class="bg-blue-50 border border-blue-200 rounded-lg p-3 mb-3">
@@ -195,18 +174,14 @@ defmodule EmailIaWeb.EmailsLive do
                     </div>
                   </div>
                 <% end %>
-
-                <%= if Enum.empty?(@emails) do %>
-                  <div class="text-center py-16">
-                    <div class="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                      <.icon name="hero-envelope" class="w-12 h-12 text-gray-500" />
-                    </div>
-                    <h3 class="text-xl font-semibold text-gray-900 mb-2">
-                      No archived emails found
-                    </h3>
-                    <p class="text-gray-600">Archived emails will appear here once you have them</p>
-                  </div>
-                <% end %>
+                  <.dashboard_empty_page
+                    :if={Enum.empty?(@emails)}
+                    icon="hero-envelope"
+                    title="No archived emails found"
+                    description="Archived emails will appear here once you have them"
+                    button_text="Fetch Emails"
+                    button_action={JS.push("fetch_emails")}
+                  />
               </div>
             </div>
           <% else %>
@@ -234,7 +209,7 @@ defmodule EmailIaWeb.EmailsLive do
                   </div>
                 </div>
               </div>
-              
+
     <!-- Fetch Emails Section -->
               <div class="bg-white border border-gray-200 rounded-none p-6 mb-6">
                 <div class="flex items-center justify-between mb-4">
@@ -257,7 +232,7 @@ defmodule EmailIaWeb.EmailsLive do
                   </div>
                 <% end %>
               </div>
-              
+
     <!-- Gmail Emails List -->
               <div class="bg-white border border-gray-200 rounded-none">
                 <div class="p-6 border-b border-gray-200">
@@ -271,7 +246,7 @@ defmodule EmailIaWeb.EmailsLive do
                           placeholder="Search Gmail emails..."
                           phx-keyup="search_gmail_emails"
                           phx-debounce="300"
-                          class="w-64 px-4 py-2 border border-gray-300 rounded-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+                          class="w-64 px-4 py-2 border border-gray-300 rounded-none focus:ring-2 focus:ring-[#0F62FE] focus:border-[#0F62FE]"
                         />
                         <.icon
                           name="hero-magnifying-glass"
@@ -281,7 +256,7 @@ defmodule EmailIaWeb.EmailsLive do
                       <!-- Sort -->
                       <select
                         phx-change="sort_gmail_emails"
-                        class="px-4 py-2 border border-gray-300 rounded-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+                        class="px-4 py-2 border border-gray-300 rounded-none focus:ring-2 focus:ring-[#0F62FE] focus:border-[#0F62FE]"
                       >
                         <option value="inserted_at">Date</option>
                         <option value="subject">Subject</option>
@@ -317,7 +292,7 @@ defmodule EmailIaWeb.EmailsLive do
                             </div>
                             <p class="text-sm text-gray-600 mb-2">From: {email.from}</p>
                             <p class="text-sm text-gray-500 mb-3 line-clamp-2">{email.snippet}</p>
-                            
+
     <!-- AI Summary -->
                             <%= if email.ai_summary && email.ai_summary != "" do %>
                               <div class="bg-blue-50 border border-blue-200 rounded-lg p-3 mb-3">
@@ -350,7 +325,7 @@ defmodule EmailIaWeb.EmailsLive do
                             <button
                               phx-click="view_gmail_email"
                               phx-value-id={email.id}
-                              class="text-purple-600 hover:text-purple-800 text-sm font-medium"
+                              class="text-[#0F62FE] hover:text-purple-800 text-sm font-medium"
                             >
                               View Details
                             </button>
@@ -391,7 +366,11 @@ defmodule EmailIaWeb.EmailsLive do
 
     socket =
       assign(socket,
-        active_tab: "archived",
+        active_tab: @first_tab,
+        first_tab: @first_tab,
+        second_tab: @second_tab,
+        first_tab_text: @first_tab_text,
+        second_tab_text: @second_tab_text,
         emails: emails,
         archived_count: length(emails),
         categories: fetch_categories(current_user.id),
