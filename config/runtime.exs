@@ -51,6 +51,7 @@ if config_env() == :prod do
       """
 
   config :email_ia, EmailIa.Repo,
+    adapter: Ecto.Adapters.SQLite3,
     database: database_path,
     pool_size: String.to_integer(System.get_env("POOL_SIZE") || "5")
 
