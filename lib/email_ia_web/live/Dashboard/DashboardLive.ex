@@ -146,7 +146,7 @@ defmodule EmailIaWeb.DashboardLive do
           where: c.user_id == ^user_id,
           left_join: e in Email,
           on: e.category_id == c.id,
-          group_by: [c.id, c.name, c.description],
+          group_by: [c.id],
           select: {c.name, c.description, count(e.id)}
         )
       )
