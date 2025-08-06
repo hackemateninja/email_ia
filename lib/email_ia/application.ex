@@ -8,11 +8,6 @@ defmodule EmailIa.Application do
   @impl true
   def start(_type, _args) do
 
-    if config_env() == :dev do
-      Dotenv.load
-      Mix.Task.run("loadconfig")
-    end
-
 
     children = [
       EmailIaWeb.Telemetry,
